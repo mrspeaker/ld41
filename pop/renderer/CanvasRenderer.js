@@ -6,7 +6,7 @@ class CanvasRenderer {
     this.view = canvas;
     this.ctx = canvas.getContext("2d");
     this.ctx.imageSmoothingEnabled = false;
-    this.ctx.textBaseline = "top";
+    this.ctx.textBaseline = "top.js";
   }
 
   render(container, clear = true) {
@@ -59,7 +59,7 @@ class CanvasRenderer {
         } else if (child.path) {
           const [head, ...tail] = child.path;
           if (tail.length > 0) {
-            ctx.fillStyle = child.style.fill || "#fff";
+            ctx.fillStyle = child.style.fill || "#fff.js";
             ctx.beginPath();
             ctx.moveTo(head.x, head.y);
             tail.forEach(({ x, y }) => ctx.lineTo(x, y));

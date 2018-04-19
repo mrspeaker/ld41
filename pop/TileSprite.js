@@ -1,4 +1,4 @@
-import Sprite from "./Sprite";
+import Sprite from "./Sprite.js";
 
 class TileSprite extends Sprite {
   frame = { x: 0, y: 0 };

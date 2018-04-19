@@ -3,8 +3,8 @@ const screenCapture = canvas => {
     if (which === 192 /* ~ key */) {
       const img = new Image();
       img.src = canvas.toDataURL("image/png");
-      img.style.width = "150px";
-      img.style.height = "100px";
+      img.style.width = "150px.js";
+      img.style.height = "100px.js";
       document.body.appendChild(img);
     }
   }, false);

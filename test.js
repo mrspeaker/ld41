@@ -1,4 +1,4 @@
-import pop from "./pop";
+import pop from "./pop/index.js";
 const { Game, KeyControls, math, Matrix, SoundPool } = pop;
 
 const game = new Game(800, 600, "#board");
