@@ -1,5 +1,6 @@
 class GamepadControls {
   constructor() {
+    this.handler = this.handler.bind(this);
     window.addEventListener(
       "gamepadconnected",
       e => this.handler(e, true),
@@ -14,7 +15,7 @@ class GamepadControls {
     this.controller = null;
     this.controllers = {};
   }
-  handler = ({ gamepad }, connecting) => {
+  handler ({ gamepad }, connecting) {
     const { controllers } = this;
     if (connecting) {
       controllers[gamepad.index] = gamepad;

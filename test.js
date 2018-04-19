@@ -6,12 +6,12 @@ const { scene, w, h } = game;
 
 const controls = new KeyControls();
 
-const sprite = scene.make.sprite("/res/images/greona.png");
+const sprite = scene.make.sprite("res/images/greona.png");
 const { pos } = sprite;
 pos.x = w / 2 - 50;
 pos.y = h / 2 - 100;
 
-const pool = new SoundPool("/res/sounds/squawk3.mp3", {}, 10);
+const pool = new SoundPool("res/sounds/squawk3.mp3", {}, 10);
 
 //Affine Transformation Matrices
 const m1 = new Matrix();

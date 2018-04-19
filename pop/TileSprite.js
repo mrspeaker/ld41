@@ -1,9 +1,9 @@
 import Sprite from "./Sprite.js";
 
 class TileSprite extends Sprite {
-  frame = { x: 0, y: 0 };
   constructor (texture, w, h) {
     super(texture);
+    this.frame = { x: 0, y: 0 };
     this.tileW = w;
     this.tileH = h;
   }
