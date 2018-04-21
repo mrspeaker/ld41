@@ -1,11 +1,43 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8" />
-  <title>Game</title>
-</head>
-<body>
-  <div id="board"></div>
-  <script src="index.js" type="module"></script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <title>LD41</title>
+    <link rel="stylesheet" href="res/main.css" />
+  </head>
+  <body>
+    <canvas width="300" height="200"></canvas>
+    <div id="pitfall"></div>
+
+    <script type="module" src="src/main.js"></script>
+    <div id="overlay">
+      <div><strong>W,A,S,D</strong>: move</div>
+      <div><span id="deb1"></span></div>
+      <div><span id="deb2"></span></div>
+    </div>
+    <img id="cross" src="res/cross.png" />
+    <div id="ad">
+      Oh hi! I just wrote a book to help you make that amazing game
+      you've been thinking about. You should check it out.<br/>
+      Press `<strong>B</strong>` to start makin' some games.
+    </div>
+    <noscript>
+      <p class="anotherVisitor">Welcome! This is my LD41 game entry
+        If you'd like to explore it, you will need to enable JavaScript.
+        Go on, just for a minute!
+      </p>
+    </noscript>
+    <p id="nosupport" class="anotherVisitor">Welcome! This is my LD41 game entry.
+      But it's using features (<span id="nomodule">
+      <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import">JavaScript
+        Native Modules</a></span><span id="nowebgl2">WebGL2</span>)
+      that it seems like your browser doesn't support yet.<br/><br/>
+      <a href="https://github.com/mrspeaker/webgl2-voxels">But have a look at the code</a>
+      if you're that way inclined!
+    </p>
+    <script nomodule>
+      document.querySelector("#nosupport").style.display = "block";
+      document.querySelector("#nomodule").style.display = "inline";
+    </script>
+  </body>
 </html>
