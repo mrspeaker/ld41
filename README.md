@@ -6,6 +6,8 @@ minecraft in background, pitfall II in foreground
 
 Foreground is pitfall 2 - explore caverns, avoid obstacles, get gold etc.
 
+Foreground is the "below ground caverns": climb your way up to the top to get to your 3d self and merge.
+
 Background is mineraft zombie shooter. collect health/food/resources that you can use in the foreground game.
 
 If you get near a zombie in minecraft, it emerges from the ground (like how skeletons appear in Ghost n Goblins).
@@ -26,7 +28,6 @@ Hard parts:
 
 TODO:
 
-  * port ladders example into game: file:///home/mrspeaker/Documents/book/gamedevbook/v1/ch05-09b-tilemap-ladders-cut/index-native.html
+  * quick refactor of my frankenstein prototype
   * add gravity to ladders:
     * but stop at edges.
-  * add camera/pan to Foreground
