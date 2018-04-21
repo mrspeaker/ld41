@@ -37,6 +37,19 @@ class Transform {
     return this;
   }
 
+  updateMatrixNoRot() {
+    const { view, position, scale, rotation } = this;
+    m4.identity(view);
+    m4.translate(view, position.x, position.y, position.z, view);
+    // m4.xRotate(view, rotation.x * Transform.deg2Rad, view);
+    // m4.zRotate(view, rotation.z * Transform.deg2Rad, view);
+    // m4.yRotate(view, rotation.y * Transform.deg2Rad, view);
+    //m4.scale(view, scale.x, scale.y, scale.z, view);
+
+    this.updateDirection();
+    return this;
+  }
+
   updateDirection () {
     const { view } = this;
     m4.transformVector(view, [0, 0, 1, 0], this.forward);

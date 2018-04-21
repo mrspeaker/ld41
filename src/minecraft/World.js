@@ -1,5 +1,6 @@
 import ChunkModel from "./models/ChunkModel.js";
-import Cube from "./models/Cube.js";
+import Billboard from "./models/Billboard.js";
+
 
 import Chunk from "./Chunk.js";
 
@@ -22,9 +23,9 @@ class World {
 
     this.ad = {
       visible: false,
-      renderable: Cube.create(gl)
+      renderable: Billboard.create(gl)
     };
-    this.ad.renderable.scale.set(0.75, 0.75, 0.75);
+    this.ad.renderable.scale.set(3, 3, 1);
   }
 
   update() {
@@ -70,7 +71,7 @@ class World {
   gen(initDensity) {
     const { chunks } = this;
     const simplex = new SimplexNoise();
-    const density = 29;//initDensity || Math.random() * Math.random() * 40 + 6;
+    const density = 40;//initDensity || Math.random() * Math.random() * 40 + 6;
     chunks.forEach(cr => {
       const { chunk } = cr;
       const AIR = 0;
@@ -84,7 +85,7 @@ class World {
         let y = ((i / (chunk.x * chunk.z)) | 0) + chunk.yo;
 
         if (y < 1) return GRASS; // Ground
-        let v = simplex.noise2D(x / density, z / density) * 4 + 4;
+        let v = simplex.noise2D(x / density, z / density) * 4 + 2;
         //const bowl = (Math.sin(x / 4) * Math.cos(z / 4)) * 16;
         //if (y <= bowl) v = 0;
         const solid = y < v;// < Math.max(0, Math.min(1, Math.floor(v)));

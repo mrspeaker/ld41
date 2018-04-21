@@ -1,6 +1,7 @@
 import SkyboxShader from "./minecraft/shaders/SkyboxShader.js";
 import VoxelShader from "./minecraft/shaders/VoxelShader.js";
 import DebugShader from "./minecraft/shaders/DebugShader.js";
+import BillboardShader from "./minecraft/shaders/BillboardShader.js";
 import CameraController from "./minecraft/controls/CameraController.js";
 import KeyboardControls from "./minecraft/controls/KeyboardControls.js";
 
@@ -11,6 +12,7 @@ import Cube from "./minecraft/models/Cube.js";
 import Ray from "./minecraft/math/Ray.js";
 import glUtils from "./minecraft/glUtils.js";
 import digAndBuild from "./minecraft/digAndBuild.js";
+import m4 from "../vendor/m4.js";
 
 import pop from "../pop/index.js";
 const { Game, Camera: TileCamera, KeyControls, math, Texture, Sprite } = pop;
@@ -32,6 +34,7 @@ const deb1 = document.querySelector("#deb1");
 const ad1 = document.querySelector("#ad");
 
 const camera = new Camera(gl);
+console.log(camera);
 camera.mode = Camera.MODE_FREE;
 const controls = {
   keys: new KeyboardControls(gl.canvas),
@@ -58,6 +61,7 @@ const voxelShader = new VoxelShader(gl, camera.projectionMatrix);
 const skybox = Cube.create(gl, "Skybox", 300, 300, 300);
 const skyboxShader = new SkyboxShader(gl, camera.projectionMatrix);
 const debugShader = new DebugShader(gl, camera.projectionMatrix);
+const billboardShader = new BillboardShader(gl, camera.projectionMatrix);
 
 const world = new World(gl);
 const player = new Player(controls, camera, world);
@@ -95,7 +99,7 @@ function preload() {
       { name: "cube3", src: "res/images/mc_dn.png", type: "img" },
       { name: "cube4", src: "res/images/mc_bk.png", type: "img" },
       { name: "cube5", src: "res/images/mc_ft.png", type: "img" },
-      { name: "ad", src: "res/html5games.png", type: "tex" }
+      { name: "ad", src: "res/images/zombo1.png", type: "tex" }
     ].map(
       ({ name, src, type }) =>
         new Promise(res => {
@@ -121,7 +125,8 @@ function initialize(res) {
   glUtils.loadCubeMap(gl, "skybox", cubeImg);
   skyboxShader.setCube(glUtils.textures.skybox);
   voxelShader.setTexture(glUtils.textures.blocks);
-  debugShader.setTexture(glUtils.textures.ad);
+  //debugShader.setTexture(glUtils.textures.ad);
+  billboardShader.setTexture(glUtils.textures.ad);
 
   // Initialize webgl
   gl.clearColor(1, 1, 1, 1.0);
@@ -133,7 +138,7 @@ function initialize(res) {
   // Set up initial chunks with density 10
   world.gen(10);
 }
-
+//);
 game.run((dt, t) => {
   state.webGLReady && renderWebGL(dt, t);
 });
@@ -206,14 +211,20 @@ function renderWebGL(dt, t) {
       "useTex",
       0.0
     )
-    .render(cursor)
-    .setUniforms("colour", [1, 1, 1, 0.1], "tex", 0, "useTex", 1.0)
+    .render(cursor);
+
+  billboardShader
+    .activate()
+    .preRender("camera", camera.view, "colour", [1, 1, 1, 0.1], "tex", 0, "useTex", 1.0)
     .render(world.ad.renderable);
 
-  world.ad.renderable.rotation.x += dt * 30.0;
-  world.ad.renderable.rotation.y += dt * 27.0;
-  world.ad.renderable.rotation.z += dt * 21.0;
-  world.ad.renderable.position.y += Math.sin(t / 300) * 0.01;
+  const rr = world.ad.renderable;
+  const dx = camera.transform.position.x - rr.position.x;
+  const dz = camera.transform.position.z - rr.position.z;
+  const a = Math.atan2(dx, dz);
+  rr.rotation.y = a * (180 / Math.PI);
+
+
 
   // Debug
   const chunk = world.getChunk(pos.x, pos.y, pos.z);
