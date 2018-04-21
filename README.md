@@ -27,6 +27,7 @@ Hard parts:
   * proc-gen the foregraound map?
 
 TODO:
+  * Move level to Tiled (don't think theres time for proc gen?)
   * Pick palletes for fore vs background. weird because caverns should be dark, but i need them to be light
   * quick refactor of my frankenstein prototype
   * Add win screen/restart when get to top of ladders.
