@@ -85,22 +85,6 @@ scene.add(sprite);
 const { pos } = sprite;
 pos.x = w / 2 - 50;
 pos.y = h / 2 + 112;
-sprite.onLadder = false;
-game.run((dt, t) => {
-  const { x, y } = controls2d;
-  const xo = 100 * dt * Math.sign(x);
-  const yo = 100 * dt * Math.sign(y);
-  const r = wallslideWithLadders(sprite, map, xo, yo);
-  if (!sprite.onLadder) {
-    pos.x += r.x;
-  }
-  pos.y += r.y;
-
-  //pos.x += Math.cos(t * 10) * 200 * dt;
-  //let y = Math.sin(t * 10) * 200;
-  //y += Math.sin(t * 11) * 200;
-  //pos.y += y * dt;
-});
 
 
 // Shaders
@@ -123,10 +107,11 @@ const state = {
   lastGen: Date.now()
 };
 
+let webGLReady = false;
 // MAIN
 preload()
   .then(initialize)
-  .then(() => requestAnimationFrame(t => loopy(t, t, state)));
+  .then(() => webGLReady = true);
 
 function preload() {
   const loadImg = src =>
@@ -184,10 +169,25 @@ function initialize(res) {
   world.gen(10);
 }
 
-function loopy(t, last = t, state) {
-  requestAnimationFrame(time => loopy(time, t, state));
-  const dt = Math.min(t - last, 100) / 1000;
 
+game.run((dt, t) => {
+  const { x, y } = controls2d;
+  const xo = 100 * dt * Math.sign(x);
+  const yo = 100 * dt * Math.sign(y);
+  const r = wallslideWithLadders(sprite, map, xo, yo);
+  if (!sprite.onLadder) {
+    pos.x += r.x;
+  }
+  pos.y += r.y;
+
+  //pos.x += Math.cos(t * 10) * 200 * dt;
+  //let y = Math.sin(t * 10) * 200;
+  //y += Math.sin(t * 11) * 200;
+  //pos.y += y * dt;
+  webGLReady && renderWebGL(dt, t);
+});
+
+function renderWebGL(dt, t) {
   player.update(dt);
   world.update(dt);
 

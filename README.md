@@ -12,6 +12,7 @@ If you get near a zombie in minecraft, it emerges from the ground (like how skel
 
 Issue: platformer is moving left and right primarily. Minecraft is forward and backward. This encourages/requires player to be strafing a lot. Need to make this a feature of the background game...
   * make obvious "spawn areas" - if you go near them then things will spawn, but otherwise it's pretty safe to concentrate on the foreground game. If you are going to run into somethig bad then you'll have to mouse around and strafe accordingly.
+  * foreground should lock to edge if walking off - fall down holes though.
 
 Would be great if geographical/weather features appeared in both games at the same time.
 
@@ -26,5 +27,6 @@ Hard parts:
 TODO:
 
   * port ladders example into game: file:///home/mrspeaker/Documents/book/gamedevbook/v1/ch05-09b-tilemap-ladders-cut/index-native.html
-  * add gravity to ladders.
+  * add gravity to ladders:
+    * but stop at edges.
   * add camera/pan to Foreground
