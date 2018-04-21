@@ -26,6 +26,11 @@ class World {
       renderable: Billboard.create(gl)
     };
     this.ad.renderable.scale.set(3, 3, 1);
+    this.zomb = [...Array(100)].map(() => {
+      const z = Billboard.create(gl);
+      z.scale.set(3, 3, 1);
+      return z;
+    });
   }
 
   update() {
@@ -96,7 +101,9 @@ class World {
       cr.rechunk();
     });
 
-    this.setAd();
+    this.zomb.forEach(z => {
+      z.position.set(...this.getFreeSpot());
+    });
   }
 
   // Traverse world down ray until hit a cell.
@@ -175,8 +182,8 @@ class World {
     return distToAd < 10;
   }
 
-  setAd() {
-    const { ad } = this;
+  getFreeSpot() {
+    //const { ad } = this;
     let found = false;
     let max = 20;
     let x;
@@ -201,7 +208,8 @@ class World {
         found = true;
       }
     }
-    ad.renderable.position.set(x, 2.5, z);
+    return [x, 2.5, z];
+    //ad.renderable.position.set(x, 2.5, z);
   }
 }
 

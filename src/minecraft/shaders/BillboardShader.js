@@ -34,8 +34,15 @@ const fs = `#version 300 es
     vec4 tx = texture(tex, vuv);
     if (tx.a < 0.1)
       discard;
-    else
-      col = useTex == 1.0 ? texture(tex, vuv) : vcol;
+
+    float near = 10.0;
+    float far = 40.0;
+    float dist = gl_FragCoord.z / gl_FragCoord.w;
+    float fog = 1.0 - (clamp((far - dist) / (far - near), 0.0, 1.0));
+    //vec4 tx = useTex == 1.0 ? texture(tex, vuv) : vcol;
+    vec4 fogmix = mix(tx, vec4(65.0/255.0, 95.0/255.0, 0.8, 1.0), fog);
+    col = vec4(fogmix.rgb, 1.0);
+
   }
 `;
 

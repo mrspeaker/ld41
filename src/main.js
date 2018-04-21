@@ -213,18 +213,17 @@ function renderWebGL(dt, t) {
     )
     .render(cursor);
 
+  world.zomb.forEach(z => {
+    const dx = camera.transform.position.x - z.position.x;
+    const dz = camera.transform.position.z - z.position.z;
+    const a = Math.atan2(dx, dz);
+    z.rotation.y = a * (180 / Math.PI);
+  });
+
   billboardShader
     .activate()
     .preRender("camera", camera.view, "colour", [1, 1, 1, 0.1], "tex", 0, "useTex", 1.0)
-    .render(world.ad.renderable);
-
-  const rr = world.ad.renderable;
-  const dx = camera.transform.position.x - rr.position.x;
-  const dz = camera.transform.position.z - rr.position.z;
-  const a = Math.atan2(dx, dz);
-  rr.rotation.y = a * (180 / Math.PI);
-
-
+    .render(world.zomb);
 
   // Debug
   const chunk = world.getChunk(pos.x, pos.y, pos.z);
