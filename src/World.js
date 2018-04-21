@@ -88,9 +88,9 @@ class World {
         //const bowl = (Math.sin(x / 4) * Math.cos(z / 4)) * 16;
         //if (y <= bowl) v = 0;
         const solid = y < v;// < Math.max(0, Math.min(1, Math.floor(v)));
-        const isStone = (v / 3) | (0 == 1);
+        const isGrass = (v / 3) | (0 == 1);
         const isWood = (v | 0) % 3 == 2;
-        return !solid ? AIR : isStone ? STONE : isWood ? TREE : GRASS;
+        return !solid ? AIR : isGrass ? GRASS : isWood ? TREE : STONE;
       });
       cr.rechunk();
     });

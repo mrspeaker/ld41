@@ -14,7 +14,7 @@ import glUtils from "./glUtils.js";
 import digAndBuild from "./digAndBuild.js";
 
 import pop from "../pop/index.js";
-const { Game, KeyControls, math, Matrix, Texture, TileMap, wallslideWithLadders, Sprite } = pop;
+const { Game, Camera: TileCamera, KeyControls, math, Texture, TileMap, wallslideWithLadders, Sprite } = pop;
 
 const gl = document.querySelector("canvas").getContext("webgl2");
 if (!gl) {
@@ -65,23 +65,37 @@ const map = new TileMap([
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   1, 1, 2, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1,
+  0, 0, 3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  1, 1, 2, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1,
   0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-].map(i => tileIndexes[i]), 25, 20, 32, 32, tiles);
-
-scene.add(map);
+].map(i => tileIndexes[i]), 25, 30, 32, 32, tiles);
 
 const sprite = new Sprite(playerTex);
+console.log(w, h, map.w, map.h)
+const camera2D = new TileCamera(sprite, { w, h }, { w: map.w, h: map.h });
+
+scene.add(camera2D);
+camera2D.add(map);
+
 sprite.hitBox = {
   x: 4,
   y: 4,
   w: 10,
   h: 20
 };
-scene.add(sprite);
+camera2D.add(sprite);
 const { pos } = sprite;
 pos.x = w / 2 - 50;
 pos.y = h / 2 + 112;
@@ -179,11 +193,6 @@ game.run((dt, t) => {
     pos.x += r.x;
   }
   pos.y += r.y;
-
-  //pos.x += Math.cos(t * 10) * 200 * dt;
-  //let y = Math.sin(t * 10) * 200;
-  //y += Math.sin(t * 11) * 200;
-  //pos.y += y * dt;
   webGLReady && renderWebGL(dt, t);
 });
 
