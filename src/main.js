@@ -14,7 +14,7 @@ import glUtils from "./glUtils.js";
 import digAndBuild from "./digAndBuild.js";
 
 import pop from "../pop/index.js";
-const { Game, KeyControls, math, Matrix, Texture, TileMap } = pop;
+const { Game, KeyControls, math, Matrix, Texture, TileMap, wallslideWithLadders, Sprite } = pop;
 
 const gl = document.querySelector("canvas").getContext("webgl2");
 if (!gl) {
@@ -35,11 +35,19 @@ const controls = {
 };
 
 const tiles = new Texture("res/images/ld41-tiles.png");
+const playerTex = new Texture("res/images/greona.png");
 
 const game = new Game(800, 600, "#pitfall");
 const { scene, w, h } = game;
 
 const controls2d = new KeyControls();
+
+var tileIndexes = [
+  { idx: 0, id: "empty", x: 0, y: 0, walkable: true },
+  { idx: 1, id: "platform", x: 1, y: 0 },
+  { idx: 2, id: "ladderTop", x: 2, y: 0, walkable: true, climbable: true },
+  { idx: 3, id: "ladder", x: 3, y: 0, walkable: true, climbable: true },
+];
 
 const map = new TileMap([
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -62,18 +70,32 @@ const map = new TileMap([
   0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-].map(i => ({x: i, y: 0})), 25, 20, 32, 32, tiles);
+].map(i => tileIndexes[i]), 25, 20, 32, 32, tiles);
 
 scene.add(map);
 
-const sprite = scene.make.sprite("res/images/greona.png");
+const sprite = new Sprite(playerTex);
+sprite.hitBox = {
+  x: 4,
+  y: 4,
+  w: 10,
+  h: 20
+};
+scene.add(sprite);
 const { pos } = sprite;
 pos.x = w / 2 - 50;
-pos.y = h / 2 + 120;
-
+pos.y = h / 2 + 112;
+sprite.onLadder = false;
 game.run((dt, t) => {
-  const { x } = controls2d;
-  pos.x += 100 * dt * Math.sign(x);
+  const { x, y } = controls2d;
+  const xo = 100 * dt * Math.sign(x);
+  const yo = 100 * dt * Math.sign(y);
+  const r = wallslideWithLadders(sprite, map, xo, yo);
+  if (!sprite.onLadder) {
+    pos.x += r.x;
+  }
+  pos.y += r.y;
+
   //pos.x += Math.cos(t * 10) * 200 * dt;
   //let y = Math.sin(t * 10) * 200;
   //y += Math.sin(t * 11) * 200;

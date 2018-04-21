@@ -25,6 +25,7 @@ import TwinStickControls from "./controls/TwinStickControls.js";
 import Vec from "./utils/Vec.js";
 import visibleInViewport from "./utils/visibleInViewport.js";
 import wallslide from "./movement/wallslide.js";
+import wallslideWithLadders from "./movement/wallslideWithLadders.js";
 import webAudio from "./sound/webAudio.js";
 
 export default {
@@ -55,5 +56,6 @@ export default {
   Vec,
   visibleInViewport,
   wallslide,
+  wallslideWithLadders,
   webAudio
 };
