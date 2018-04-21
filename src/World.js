@@ -70,7 +70,7 @@ class World {
   gen(initDensity) {
     const { chunks } = this;
     const simplex = new SimplexNoise();
-    const density = initDensity || Math.random() * Math.random() * 40 + 6;
+    const density = 29;//initDensity || Math.random() * Math.random() * 40 + 6;
     chunks.forEach(cr => {
       const { chunk } = cr;
       const AIR = 0;
@@ -84,10 +84,10 @@ class World {
         let y = ((i / (chunk.x * chunk.z)) | 0) + chunk.yo;
 
         if (y < 1) return GRASS; // Ground
-        let v = simplex.noise3D(x / density, y / density, z / density) * 8;
+        let v = simplex.noise2D(x / density, z / density) * 4 + 4;
         //const bowl = (Math.sin(x / 4) * Math.cos(z / 4)) * 16;
         //if (y <= bowl) v = 0;
-        const solid = Math.max(0, Math.min(1, Math.floor(v)));
+        const solid = y < v;// < Math.max(0, Math.min(1, Math.floor(v)));
         const isStone = (v / 3) | (0 == 1);
         const isWood = (v | 0) % 3 == 2;
         return !solid ? AIR : isStone ? STONE : isWood ? TREE : GRASS;
