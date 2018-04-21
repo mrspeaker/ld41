@@ -16,19 +16,9 @@ class World {
     // TODO: fix chunk id-ing.
     this.chIdx = spiral.map(([x, y]) => `${x}:0:${y}`);
 
-    // Extra chunk for portal
-    this.chunks.push(new ChunkModel(gl, new Chunk(x, y, z, 0, 1, 0)));
-    this.chIdx.push("0:1:0");
-
     this.cx = x;
     this.cy = y;
     this.cz = z;
-
-    this.portal = {
-      renderable: Cube.create(gl, "portal", 3.99, 4.99, 1),
-      timeInPortal: 0,
-      leftPortal: false
-    };
 
     this.ad = {
       visible: false,
@@ -81,8 +71,7 @@ class World {
     const { chunks } = this;
     const simplex = new SimplexNoise();
     const density = initDensity || Math.random() * Math.random() * 40 + 6;
-    // Slice out portal chunk!
-    chunks.slice(0, -1).forEach(cr => {
+    chunks.forEach(cr => {
       const { chunk } = cr;
       const AIR = 0;
       const TREE = 1;
@@ -106,7 +95,6 @@ class World {
       cr.rechunk();
     });
 
-    this.setPortal();
     this.setAd();
   }
 
@@ -176,50 +164,6 @@ class World {
     return null;
   }
 
-  setPortal() {
-    const { portal } = this;
-    const { renderable } = portal;
-    const x = 0;
-    const y = 17;
-    const z = 0;
-
-    portal.timeInPortal = 0;
-    portal.leftPortal = false;
-    renderable.position.set(x + 3, y + 3.5, z + 0.5);
-
-    for (let i = 1; i < 6; i++) {
-      this.setCell(x + i, y, z, 4);
-      this.setCell(x + i, y + 6, z, 4);
-    }
-    for (let i = 0; i < 7; i++) {
-      this.setCell(x, y + i, z, 3);
-      this.setCell(x + 5, y + i, z, 3);
-    }
-  }
-
-  didTriggerPortal(pos, dt) {
-    const { portal } = this;
-    const { leftPortal, timeInPortal } = portal;
-    const distToPortal = Vec3.from(pos)
-      .scale(-1)
-      .addv(portal.renderable.position)
-      .lengthSq();
-
-    if (distToPortal <= 6) {
-      portal.timeInPortal = leftPortal ? timeInPortal + dt : 0;
-    } else if (!leftPortal) {
-      portal.leftPortal = true;
-      portal.timeInPortal = 0;
-    }
-
-    if (portal.timeInPortal > 2) {
-      portal.timeInPortal = 0;
-      portal.leftPortal = false;
-      return true;
-    }
-
-    return false;
-  }
 
   didTriggerAd(pos) {
     const { ad } = this;

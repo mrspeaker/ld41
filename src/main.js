@@ -1,6 +1,5 @@
 import SkyboxShader from "./shaders/SkyboxShader.js";
 import VoxelShader from "./shaders/VoxelShader.js";
-import PortalShader from "./shaders/PortalShader.js";
 import DebugShader from "./shaders/DebugShader.js";
 
 import CameraController from "./controls/CameraController.js";
@@ -14,9 +13,8 @@ import Ray from "./math/Ray.js";
 import glUtils from "./glUtils.js";
 import digAndBuild from "./digAndBuild.js";
 
-
 import pop from "../pop/index.js";
-const { Game, KeyControls, math, Matrix } = pop;
+const { Game, KeyControls, math, Matrix, Texture, TileMap } = pop;
 
 const gl = document.querySelector("canvas").getContext("webgl2");
 if (!gl) {
@@ -36,55 +34,55 @@ const controls = {
   mouse: new CameraController(gl, camera)
 };
 
+const tiles = new Texture("res/images/ld41-tiles.png");
 
 const game = new Game(800, 600, "#pitfall");
 const { scene, w, h } = game;
 
 const controls2d = new KeyControls();
 
+const map = new TileMap([
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  1, 1, 2, 1, 1, 1, 1, 2, 1, 0, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1,
+  0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  1, 1, 2, 1, 0, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1,
+  0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+].map(i => ({x: i, y: 0})), 25, 20, 32, 32, tiles);
+
+scene.add(map);
+
 const sprite = scene.make.sprite("res/images/greona.png");
 const { pos } = sprite;
 pos.x = w / 2 - 50;
-pos.y = h / 2 - 100;
-
-
-//Affine Transformation Matrices
-const m1 = new Matrix();
-//m1.rotate(Math.PI);
-m1.translate(200, 200);
-
-sprite.pos.copy(m1.getPos());
-
-let last;
-for (let i = 0; i < 20; i++) {
-  last = scene.make
-    .sprite("res/images/greona.png");
-    last
-    .pos.set(math.rand(0, w), math.rand(0, h));
-}
-last.pos.x = pos.x + 50;
-last.pos.y = pos.y;
-
+pos.y = h / 2 + 120;
 
 game.run((dt, t) => {
   const { x } = controls2d;
-  pos.x += 200 * dt * Math.sign(x);
+  pos.x += 100 * dt * Math.sign(x);
   //pos.x += Math.cos(t * 10) * 200 * dt;
-  let y = Math.sin(t * 10) * 200;
-  y += Math.sin(t * 11) * 200;
-  pos.y += y * dt;
-  //
-  // last.pos.y += Math.sin(t * 10) * 200 * dt;
-  // last.pos.y += Math.sin(t * 11) * 200 * dt;
-  //
-  // //m1.rotate(0.1);
-  // //sprite.rotation = m1.getRotation();
+  //let y = Math.sin(t * 10) * 200;
+  //y += Math.sin(t * 11) * 200;
+  //pos.y += y * dt;
 });
 
 
 // Shaders
 const voxelShader = new VoxelShader(gl, camera.projectionMatrix);
-const portalShader = new PortalShader(gl, camera.projectionMatrix);
 const skybox = Cube.create(gl, "Skybox", 300, 300, 300);
 const skyboxShader = new SkyboxShader(gl, camera.projectionMatrix);
 const debugShader = new DebugShader(gl, camera.projectionMatrix);
@@ -118,7 +116,7 @@ function preload() {
 
   return Promise.all(
     [
-      { name: "blocks", src: "res/mine.png", type: "tex" },
+      { name: "blocks", src: "res/images/mine.png", type: "tex" },
       { name: "cube0", src: "res/mc_rt.png", type: "img" },
       { name: "cube1", src: "res/mc_lf.png", type: "img" },
       { name: "cube2", src: "res/mc_up.png", type: "img" },
@@ -213,9 +211,6 @@ function loopy(t, last = t, state) {
     cursor.position.add(0.5, 0.5, 0.5);
   }
 
-  if (world.didTriggerPortal(player.pos, dt)) {
-    regenWorld();
-  }
 
   if (world.didTriggerAd(player.pos)) {
     ad1.style.display = "block";
@@ -252,19 +247,6 @@ function loopy(t, last = t, state) {
   world.ad.renderable.rotation.y += dt * 27.0;
   world.ad.renderable.rotation.z += dt * 21.0;
   world.ad.renderable.position.y += Math.sin(t / 300) * 0.01;
-
-  portalShader
-    .activate()
-    .preRender(
-      "camera",
-      camera.view,
-      "t",
-      t / 1000,
-      "whirl",
-      world.portal.timeInPortal / 2
-    )
-    .render(world.portal.renderable)
-    .deactivate();
 
   // Debug
   const chunk = world.getChunk(pos.x, pos.y, pos.z);
