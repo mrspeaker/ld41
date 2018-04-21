@@ -2,7 +2,7 @@ body {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  background-color: rgb(135, 165, 255);
+  background-color: #000;
   font-family: monospace;
 }
 #overlay {
@@ -71,8 +71,18 @@ a {
   background-size: cover;
 }
 
-#pitfall canvas {
+#games {
+  margin: 50px auto;
+  text-align: center;
+  position: relative;
+}
+
+#minecraft, #pitfall {
+  width: 100%;
+  margin: 0 auto;
+}
+/* #pitfall canvas {
   width: 100%;
   height: 100%;
   object-fit: contain;
-}
+} */
