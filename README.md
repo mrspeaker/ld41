@@ -3,11 +3,9 @@
 two games overlaayed on each other.
 minecraft in background, pitfall II in foreground
 
-Foreground is pitfall 2 - explore caverns, avoid obstacles, get gold etc.
+Foreground is pitfall 2 - explore caverns, avoid obstacles, get gold etc, find the magic thingo that kills all the zombies above. Find the thingo, climb your way up to the top to get to your 3d self and merge.
 
-Foreground is the "below ground caverns": climb your way up to the top to get to your 3d self and merge.
-
-Background is mineraft zombie (shooter?). collect health/food/resources that you can use in the foreground game.
+Background is mineraft zombie (shooter?). collect health/food/resources that you can use in the foreground game. You can't stand still too long in the 3d world, baddies gather (stops you from just wedging yourself).
 
 If you get near a zombie in minecraft, it emerges from the ground (like how skeletons appear in Ghost n Goblins).
 
@@ -27,10 +25,10 @@ Hard parts:
   * proc-gen the foregraound map?
 
 TODO:
+  * add gravity to ladders:
+    * but stop at edges.
   * Move level to Tiled (don't think theres time for proc gen?)
   * Pick palletes for fore vs background. weird because caverns should be dark, but i need them to be light
   * quick refactor of my frankenstein prototype
   * Add win screen/restart when get to top of ladders.
-  * add gravity to ladders:
-    * but stop at edges.
   * billboard sprites in back.
