@@ -23,7 +23,7 @@ class GameScreen extends Container {
     const { pos } = player;
     pos.set(map.w / 2, map.h - map.tileH * 6);
 
-    [...Array(100)].map(() => {
+    [...Array(50)].map(() => {
       const g = this.grail.add(new Grail());
       g.pos.copy(map.getPlatformSpot());
     });

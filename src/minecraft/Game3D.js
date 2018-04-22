@@ -57,7 +57,7 @@ class Game3D {
     //this.cursor = cursor;
     this.state = {
 
-    }
+    };
     this.reset();
   }
 
@@ -71,17 +71,22 @@ class Game3D {
     player.pos.set(3, 19, 0.3);
 
     this.state.lastGen = Date.now();
+    this.state.lastSpawn = 0;
 
-    this.zomb = [...Array(10)].map(() => {
-      return new Zomb(gl, player.pos, world);
-    });
     this.bullets = [];
     this.world = world;
     this.player = player;
 
-    this.zomb.forEach(z => {
-      z.cube.position.set(...world.getFreeSpot());
-    });
+    this.zomb = [];
+    [...Array(5)].map(() => this.spawn());
+  }
+
+  spawn() {
+    const { player, world, gl, zomb } = this;
+    const z = new Zomb(gl, player.pos, world);
+    z.cube.position.set(...world.getFreeSpot());
+    zomb.push(z);
+    return z;
   }
 
   init(res) {
@@ -125,6 +130,12 @@ class Game3D {
     world.update(dt);
 
     const { pos } = player;
+
+    state.lastSpawn += dt;
+    if (state.lastSpawn > 2) {
+      this.spawn();
+      state.lastSpawn = 0;
+    }
 
     const regenWorld = () => {
       controls.keys.keys[69] = false;
