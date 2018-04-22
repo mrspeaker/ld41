@@ -5,15 +5,21 @@ const vs = `#version 300 es
   uniform mat4 proj;
   uniform mat4 camera;
   uniform vec4 colour;
-
+  uniform vec2 sprite;
   layout(location=0) in vec3 pos;
   layout(location=2) in vec2 uv;
+
+  const float size = 1.0/ 6.0;// (512.0 / 6.0);
+
 
   out lowp vec4 vcol;
   out vec2 vuv;
   void main() {
     vcol = colour;
-    vuv = uv;
+
+    float u = sprite.x * size + uv.x * size;
+    float v = sprite.y * size + uv.y * size * 3.0;
+    vuv = vec2(u,v);
 
     // vec3 right = vec3( camera[0][0], camera[1][0], camera[2][0] );
     // vec3 up = vec3( camera[0][1], camera[1][1], camera[2][1] );

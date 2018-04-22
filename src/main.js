@@ -36,7 +36,8 @@ function preload() {
       { name: "cube3", src: "res/images/mc_dn.png", type: "img" },
       { name: "cube4", src: "res/images/mc_bk.png", type: "img" },
       { name: "cube5", src: "res/images/mc_ft.png", type: "img" },
-      { name: "ad", src: "res/images/zombo1.png", type: "tex" }
+      { name: "ad", src: "res/images/zombo1.png", type: "tex" },
+      { name: "ringu", src: "res/images/ringu.png", type: "tex" }
     ].map(
       ({ name, src, type }) =>
         new Promise(res => {

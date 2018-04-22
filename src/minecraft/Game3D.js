@@ -87,7 +87,7 @@ class Game3D {
     shaders.skybox.setCube(glUtils.textures.skybox);
     shaders.voxel.setTexture(glUtils.textures.blocks);
     //debugShader.setTexture(glUtils.textures.ad);
-    shaders.billboard.setTexture(glUtils.textures.ad);
+    shaders.billboard.setTexture(glUtils.textures.ringu);
 
     // Initialize webgl
     gl.clearColor(1, 1, 1, 1.0);
@@ -235,7 +235,9 @@ class Game3D {
           "tex",
           0,
           "useTex",
-          1.0
+          1.0,
+          "sprite",
+          [(t * 4) % 6 | 0, 0]
         )
         .render(zomb.map(z => z.cube));
     }

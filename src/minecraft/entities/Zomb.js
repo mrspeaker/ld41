@@ -4,15 +4,16 @@ import Vec3 from "../math/Vec3.js";
 class Zomb {
   constructor(gl, target) {
     //super();
-    const cube = Billboard.create(gl, "zomb", 3, 3, 1);
+    const cube = Billboard.create(gl, "zomb", 1, 2, 1);
     this.cube = cube;
     this.target = target;
     this.off = Math.random() * 100;
+    this.frame = 0;
   }
 
   update(dt, t) {
     const { cube, target } = this;
-
+    //this.frame = (t % 100) | 0;
     const dir = Vec3.from(cube.position)
       .scale(-1)
       .addv(target)

@@ -56,6 +56,9 @@ class Shader {
           case gl.SAMPLER_2D:
             gl.uniform1i(u.loc, value);
             break;
+          case gl.FLOAT_VEC2:
+            gl.uniform2fv(u.loc, value);
+            break;
           case gl.FLOAT_VEC3:
             gl.uniform3fv(u.loc, value);
             break;
