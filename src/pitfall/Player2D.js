@@ -12,12 +12,12 @@ class Player2D extends TileSprite {
       w: 10,
       h: 20
     };
-    this.dir = 1;
     this.anims = new AnimManager(this);
     this.anims.add("idle", [{ x: 0, y: 0 }], 1000);
     this.anims.add("walk", [1, 2, 3, 4, 5].map(x => ({ x, y: 0 })), 0.1);
     this.anims.add("climb", [0, 1].map(x => ({ x, y: 1 })), 0.1);
     this.anims.play("walk");
+
     this.controls = controls;
     this.map = map;
   }
@@ -32,9 +32,6 @@ class Player2D extends TileSprite {
     }
     pos.y += r.y;
 
-    if (x) {
-      this.dir = x;
-    }
     if (!this.onLadder) {
       if (!x) anims.play("idle");
       else {

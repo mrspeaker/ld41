@@ -27,22 +27,23 @@ Hard parts:
 ## TODO
 
 ### Super high
-  * 2d traverse platforms.
   * Pickup end goals
   * Do end screen
   * stop double-jumps
+  * 2D collision hits: gameover.
 
 ### Pretty High  
-  * 2D collision hits.
   * health pickups from
   * ghosties walk up blocks.
-  * "danger" warning when 3d baddie near
+  * "danger" warning when 3d baddie near (maybe sound - zmob)
   * screen flash when new baddie
 
 ### High
   * Move level to Tiled if there's time
   * Theme song: GnG rip
   * Rotoscope more ghosts
+  * intro - teach... pretty important cause this is HARD
+  * pickup in 3d gives temporary zombie smasher shield in 2d.
 
 ### Low
   * Seriously fix some gfx.

@@ -1,5 +1,5 @@
 import pop from "../../../pop/index.js";
-const { Texture, Sprite } = pop;
+const { Texture, Sprite, State } = pop;
 
 const playerTex = new Texture("res/images/greona.png");
 
@@ -17,8 +17,29 @@ class Zomb extends Sprite {
       y: 0
     };
     this.map = map;
+    this.state = new State("INIT");
   }
   update(dt, t) {
+    const { state } = this;
+    state.update(dt);
+    switch (state.get()) {
+      case "INIT":
+        state.set("BIRTH");
+        break;
+      case "BIRTH":
+        this.visible = ((t * 5) % 2) | 0;
+        if (state.time > 2) {
+          this.visible = true;
+          state.set("SWARM");
+        }
+        break;
+      case "SWARM":
+        this.updateSwarm(dt, t);
+        break;
+    }
+  }
+
+  updateSwarm(dt, t) {
     const { pos, vel, map, w, h } = this;
     pos.x += vel.x * dt;
     pos.y += vel.y * dt;

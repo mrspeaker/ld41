@@ -1,5 +1,5 @@
 import pop from "../../pop/index.js";
-const { Texture, TileMap } = pop;
+const { Texture, TileMap, math } = pop;
 
 const tiles = new Texture("res/images/ld41-tiles.png");
 
@@ -16,8 +16,9 @@ var tileIndexes = [
 ];
 
 const _ = 0;
+
 // prettier-ignore
-export default () => new TileMap([
+const data = [
   _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _,  _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _,
   _, _, _, _, _, _, _, _, _, _, 3, _, _, _, _, _, _, _, _, _, _, _, _, _, _,  _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _,
   _, _, _, _, _, _, _, _, _, _, 3, _, _, _, _, _, _, _, _, _, _, _, _, _, _,  _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _,
@@ -50,4 +51,31 @@ export default () => new TileMap([
   4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,  4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
   5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,  5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
   5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,  5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-].map(i => tileIndexes[i]), 50, 34, 32, 32, tiles);
+];
+
+class Level extends TileMap {
+  constructor() {
+    super(data.map(i => tileIndexes[i]), 50, 34, 32, 32, tiles);
+  }
+  getPlatformSpot() {
+    const { mapW, mapH, tileW, tileH } = this;
+    let found = false;
+    let x;
+    let y;
+    while (!found) {
+      x = math.rand(mapW - 1);
+      y = math.rand(mapH - 1);
+      const cell = this.tileAtMapPos({ x, y });
+      if (cell && !cell.frame.walkable) {
+        y -= 1;
+        const cell2 = this.tileAtMapPos({ x, y });
+        if (cell2 && cell2.frame.id === "empty") {
+          found = true;
+        }
+      }
+    }
+    return { x: x * tileW, y: y * tileH };
+  }
+}
+
+export default Level;
