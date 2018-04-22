@@ -35,7 +35,6 @@ a {
   bottom: 0;
 }
 @media (max-width: 500px) {
-
   .anotherVisitor {
     position: static;
     width: 100%;
@@ -43,19 +42,6 @@ a {
   }
 }
 
-#ad {
-  background-color: rgba(0, 0, 0, 0.4);
-  padding: 1em;
-  border-radius: 10px;
-  color: #fff;
-  margin: 0 auto;
-  width: 30em;
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  height: 200;
-}
-#ad,
 #nosupport,
 #nowebgl2,
 #nomodule {
@@ -81,8 +67,3 @@ a {
   width: 100%;
   margin: 0 auto;
 }
-/* #pitfall canvas {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-} */

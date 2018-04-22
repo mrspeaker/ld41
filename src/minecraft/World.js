@@ -1,6 +1,4 @@
 import ChunkModel from "./models/ChunkModel.js";
-import Billboard from "./models/Billboard.js";
-import Bullet from "./entities/Bullet.js";
 
 import Chunk from "./Chunk.js";
 
@@ -20,18 +18,6 @@ class World {
     this.cx = x;
     this.cy = y;
     this.cz = z;
-
-    this.ad = {
-      visible: false,
-      renderable: Billboard.create(gl)
-    };
-    this.ad.renderable.scale.set(3, 3, 1);
-    this.zomb = [...Array(100)].map(() => {
-      const z = Billboard.create(gl);
-      z.scale.set(3, 3, 1);
-      return z;
-    });
-    this.bullets = [];
   }
 
   update() {
@@ -84,7 +70,6 @@ class World {
       const TREE = 1;
       const GRASS = 2;
       const STONE = 3;
-      //const BOOKS = 4;
       chunk.cells = chunk.cells.map((c, i) => {
         let x = i % chunk.x + chunk.xo;
         let z = ((i / chunk.x) | 0) % chunk.z + chunk.zo;
@@ -98,10 +83,6 @@ class World {
         return !solid ? AIR : isGrass ? GRASS : isWood ? TREE : STONE;
       });
       cr.rechunk();
-    });
-
-    this.zomb.forEach(z => {
-      z.position.set(...this.getFreeSpot());
     });
   }
 
@@ -171,18 +152,7 @@ class World {
     return null;
   }
 
-
-  didTriggerAd(pos) {
-    const { ad } = this;
-    const distToAd = Vec3.from(pos)
-      .scale(-1)
-      .addv(ad.renderable.position)
-      .lengthSq();
-    return distToAd < 10;
-  }
-
   getFreeSpot() {
-    //const { ad } = this;
     let found = false;
     let max = 20;
     let x;
@@ -208,7 +178,6 @@ class World {
       }
     }
     return [x, 2.5, z];
-    //ad.renderable.position.set(x, 2.5, z);
   }
 }
 

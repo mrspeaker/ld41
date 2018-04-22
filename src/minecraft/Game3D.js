@@ -9,9 +9,13 @@ import Camera from "./Camera.js";
 import World from "./World.js";
 import Player from "./Player.js";
 import Cube from "./models/Cube.js";
-//import Ray from "./math/Ray.js";
+import Ray from "./math/Ray.js";
 import glUtils from "./glUtils.js";
+import Vec3 from "./math/Vec3.js";
 //import digAndBuild from "./digAndBuild.js";
+
+import Billboard from "./models/Billboard.js";
+import Bullet from "./entities/Bullet.js";
 
 const deb1 = document.querySelector("#deb1");
 const ad1 = document.querySelector("#ad");
@@ -45,7 +49,7 @@ class Game3D {
     const world = new World(gl);
     const player = new Player(controls, camera, world);
     player.pos.set(3, 19, 0.3);
-    // this.ray = new Ray(camera);
+    this.ray = new Ray(camera);
     // const cursor = Cube.create(gl);
     // cursor.scale.set(1.001, 1.001, 1.001);
     // cursor.mesh.doBlending = true;
@@ -55,6 +59,13 @@ class Game3D {
       lastGen: Date.now(),
       webGLReady: false
     };
+
+    this.zomb = [...Array(100)].map(() => {
+      const z = Billboard.create(gl);
+      z.scale.set(3, 3, 1);
+      return z;
+    });
+    this.bullets = [];
 
     this.world = world;
     this.player = player;
@@ -87,16 +98,14 @@ class Game3D {
 
     // Set up initial chunks with density 10
     world.gen(20);
+
+    this.zomb.forEach(z => {
+      z.position.set(...world.getFreeSpot());
+    });
   }
 
   update(dt) {
-    const {
-      player,
-      world,
-      camera,
-      state,
-      controls,
-    } = this;
+    const { player, world, camera, state, controls, zomb, bullets, ray, gl } = this;
 
     player.update(dt);
     world.update(dt);
@@ -119,35 +128,46 @@ class Game3D {
 
     if (controls.mouse.isDown) {
       controls.mouse.isDown = false;
+      const r = ray.fromScreen(
+        gl.canvas.width / 2,
+        gl.canvas.height / 2,
+        gl.canvas.width,
+        gl.canvas.height
+      );
+      const b = new Bullet(this.gl, r);
+      bullets.push(b);
     }
 
-    world.zomb.forEach(z => {
+    this.zomb = zomb.filter(z => {
       const dx = camera.transform.position.x - z.position.x;
       const dz = camera.transform.position.z - z.position.z;
       const a = Math.atan2(dx, dz);
       z.rotation.y = a * (180 / Math.PI);
+      return !z.dead;
     });
 
-    // // Get block player is looking at
-    // const r = ray.fromScreen(
-    //   gl.canvas.width / 2,
-    //   gl.canvas.height / 2,
-    //   gl.canvas.width,
-    //   gl.canvas.height
-    // );
-    //
-    // const block = world.getCellFromRay(camera.transform.position, r.ray);
-    // if (block) {
-    //   digAndBuild(block, controls, world, player);
-    //   cursor.position.set(block.x, block.y, block.z);
-    //   cursor.position.add(0.5, 0.5, 0.5);
-    // }
+    this.bullets = bullets.filter(b => {
+      b.update(dt);
 
-    if (world.didTriggerAd(pos)) {
-      ad1.style.display = "block";
-    } else {
-      ad1.style.display = "none";
-    }
+      zomb.forEach(z => {
+        const dx = camera.transform.position.x - z.position.x;
+        const dz = camera.transform.position.z - z.position.z;
+        const a = Math.atan2(dx, dz);
+        z.rotation.y = a * (180 / Math.PI);
+
+        const dist = Vec3.from(z.position)
+          .scale(-1)
+          .addv(b.cube.position)
+          .lengthSq();
+
+        if (dist < 3) {
+          z.dead = true;
+          b.dead = true;
+        }
+      });
+
+      return !b.dead;
+    });
 
     // Debug
     const chunk = world.getChunk(pos.x, pos.y, pos.z);
@@ -158,14 +178,7 @@ class Game3D {
   }
 
   render(dt, t) {
-    const {
-      player,
-      world,
-      gl,
-      camera,
-      shaders,
-      skybox
-    } = this;
+    const { player, world, gl, camera, shaders, skybox, zomb, bullets } = this;
 
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
@@ -184,17 +197,19 @@ class Game3D {
       .preRender("camera", camera.view)
       .render(world.chunks);
 
-    // shaders.debug
-    //   .activate()
-    //   .preRender(
-    //     "camera",
-    //     camera.view,
-    //     "colour",
-    //     [1.0, 1.0, 0.0, 0.1],
-    //     "useTex",
-    //     0.0
-    //   )
-    //   .render(cursor);
+    if (bullets.length) {
+      shaders.debug
+        .activate()
+        .preRender(
+          "camera",
+          camera.view,
+          "colour",
+          [1.0, 1.0, 0.0, 0.3],
+          "useTex",
+          0.0
+        )
+        .render(bullets.map(b => b.cube));
+    }
 
     shaders.billboard
       .activate()
@@ -208,7 +223,7 @@ class Game3D {
         "useTex",
         1.0
       )
-      .render(world.zomb);
+      .render(zomb);
   }
 }
 
