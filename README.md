@@ -34,17 +34,14 @@ Hard parts:
   * intro screen
   * Do gameover/reset screen
   * Do win screen
-  * Fix edges of world: hard stop, or make bigger, or whateves.
+  * can't go out edges in 2d.
 
 ### Pretty High  
-  * "danger" warning when 3d baddie near (maybe sound - zmob)
-  * "rise from dead" in 3d (birth state)
+  * intro - teach... pretty important cause this is HARD
 
 ### High
   * make spawn tweaker: balance
-  * Move level to Tiled if there's time
   * Theme song: GnG rip
-  * intro - teach... pretty important cause this is HARD
   * pickup in 3d gives temporary zombie smasher shield in 2d.
 
 ### Low

@@ -14,7 +14,7 @@ const vss = `#version 300 es
   out vec2 texCoord;
   out float occ;
   out vec3 norm;
-  const float size = 1.0 / 32.0;
+  const float size = 1.0 / 64.0;
 
   void main() {
     occ = ao;

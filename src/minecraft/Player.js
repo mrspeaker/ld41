@@ -155,6 +155,12 @@ class Player {
       vel.set(0, 0, 0);
     }
 
+    // Lol: hard edges.
+    if (pos.x <= -48) pos.x = -48;
+    if (pos.x >= 64) pos.x = 64;
+    if (pos.z <= -32) pos.z = -32;
+    if (pos.z >= 64) pos.z = 64;
+
     acc.set(0, 0, 0);
   }
 }

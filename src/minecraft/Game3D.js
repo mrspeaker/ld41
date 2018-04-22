@@ -84,7 +84,20 @@ class Game3D {
   spawn() {
     const { player, world, gl, zomb } = this;
     const z = new Zomb(gl, player.pos, world);
-    z.cube.position.set(...world.getFreeSpot());
+    let spot;
+    while (!spot) {
+      const spotArray = world.getFreeSpot();
+      spot = {x: spotArray[0], y: spotArray[1], z: spotArray[2]};
+      const dist = Vec3.from(spot)
+        .scale(-1)
+        .addv(player.pos)
+        .lengthSq();
+      if (dist < 150) {
+        spot = null;
+      }
+
+    }
+    z.cube.position.setv(spot);
     zomb.push(z);
     return z;
   }
@@ -250,7 +263,7 @@ class Game3D {
           "camera",
           camera.view,
           "colour",
-          [1.0, 1.0, 0.0, 0.3],
+          [0.6, 0.6, 0.6, 0.3],
           "useTex",
           0.0
         )
