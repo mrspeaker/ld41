@@ -3,8 +3,7 @@ const { Game, Camera: TileCamera, KeyControls, math, Texture, Sprite } = pop;
 import m4 from "../vendor/m4.js";
 
 import Game3D from "./minecraft/Game3D.js";
-import Player2D from "./pitfall/Player2D.js";
-import Level from "./pitfall/Level.js";
+import GameScreen from "./pitfall/GameScreen.js";
 
 const pxWidth = 900;
 const pxHeight = 500;
@@ -13,17 +12,7 @@ const mcGame = new Game3D(pxWidth, pxHeight);
 const game = new Game(pxWidth, pxHeight, "#pitfall");
 const { scene, w, h } = game;
 
-const controls2D = new KeyControls();
-const map = Level();
-const player2D = new Player2D(controls2D, map);
-const camera2D = new TileCamera(player2D, { w, h }, { w: map.w, h: map.h });
-
-scene.add(camera2D);
-camera2D.add(map);
-camera2D.add(player2D);
-
-const { pos } = player2D;
-pos.set(map.w / 2, map.h - map.tileH * 9);
+game.scene = new GameScreen(w, h);
 
 // MAIN
 preload()

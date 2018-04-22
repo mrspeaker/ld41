@@ -10,7 +10,7 @@ class Zomb {
     this.off = Math.random() * 100;
   }
 
-  update(dt) {
+  update(dt, t) {
     const { cube, target } = this;
 
     const dir = Vec3.from(cube.position)
@@ -24,7 +24,7 @@ class Zomb {
     cube.position.z += dir.z * v;
 
     v = 0.4 * dt;
-    //cube.position.y += Math.sin(t + this.off) * v;//dir.y * v;
+    cube.position.y += Math.sin(t + this.off) * v;//dir.y * v;
     //cube.position.z += v;//dir.z * v;
   }
 }

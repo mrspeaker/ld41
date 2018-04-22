@@ -27,8 +27,7 @@ Hard parts:
 ## TODO
 
 ### Super high
-  * ghosties have to move towards you.
-  * Sync baddies in both worlds (maybe esier is if they get close, they switch to 2d)
+  * Sync baddies in both worlds: if they get close, they switch to 2d
   * Pickup end goals
   * Do end screen
   * stop double-jumps
@@ -37,6 +36,7 @@ Hard parts:
   * 3D COllisions with HP hits.
   * 2D collision hits.
   * health pickups from
+  * ghosties walk up blocks.
 
 ### High
   * Move level to Tiled (don't think theres time for proc gen?)
