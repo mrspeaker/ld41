@@ -35,7 +35,7 @@ class Camera extends Container {
     }
   }
 
-  setSubject(e = { x: 0, y: 0 }) {
+  setSubject(e) {
     this.subject = e ? e.pos || e : this.pos;
     this.offset = { x: 0, y: 0 };
 
@@ -109,7 +109,7 @@ class Camera extends Container {
     let x = -math.clamp(centeredX, 0, maxX);
 
     const centeredY = target.y + offset.y - viewport.h / 2;
-    const maxY = worldSize.h - viewport.h;
+    const maxY = worldSize.h - viewport.h - 80;
     let y = -math.clamp(centeredY, 0, maxY);
 
     if (deb) {

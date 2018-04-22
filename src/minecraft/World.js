@@ -177,7 +177,7 @@ class World {
         found = true;
       }
     }
-    return [x, 2.5, z];
+    return [x, 2, z];
   }
 }
 

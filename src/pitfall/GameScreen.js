@@ -17,7 +17,7 @@ class GameScreen extends Container {
     camera.add(player);
 
     const { pos } = player;
-    pos.set(map.w / 2, map.h - map.tileH * 9);
+    pos.set(map.w / 2, map.h - map.tileH * 6);
 
     this.controls = controls;
     this.player = player;

@@ -33,17 +33,15 @@ Hard parts:
   * stop double-jumps
 
 ### Pretty High  
-  * 3D COllisions with HP hits.
   * 2D collision hits.
   * health pickups from
   * ghosties walk up blocks.
 
 ### High
-  * Move level to Tiled (don't think theres time for proc gen?)
+  * Move level to Tiled if there's time
   * Theme song: GnG rip
-  * Rotoscope ghosts
+  * Rotoscope more ghosts
 
 ### Low
   * Seriously fix some gfx.
-  * Add comet from Fortnite to skybox
   * HOly crap refactor this garbage.

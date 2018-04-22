@@ -59,11 +59,8 @@ class Game3D {
       webGLReady: false
     };
 
-    this.zomb = [...Array(100)].map(() => {
-      return new Zomb(gl, player.pos);
-      // const z = Billboard.create(gl);
-      // z.scale.set(3, 3, 1);
-      // return z;
+    this.zomb = [...Array(10)].map(() => {
+      return new Zomb(gl, player.pos, world);
     });
     this.bullets = [];
 
