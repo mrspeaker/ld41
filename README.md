@@ -31,24 +31,23 @@ Hard parts:
 ## TODO
 
 ### Super high
-  * Do end screen
-  * what to do when 2d spawn on ladder?
-  * 2D collision hits: gameover.
+  * intro screen
+  * Do gameover/reset screen
+  * Do win screen
   * Fix edges of world: hard stop, or make bigger, or whateves.
 
 ### Pretty High  
-  * health pickups from
-  * ghosties walk up blocks.
   * "danger" warning when 3d baddie near (maybe sound - zmob)
-  * screen flash when new baddie
+  * "rise from dead" in 3d (birth state)
 
 ### High
+  * make spawn tweaker: balance
   * Move level to Tiled if there's time
   * Theme song: GnG rip
-  * Rotoscope more ghosts
   * intro - teach... pretty important cause this is HARD
   * pickup in 3d gives temporary zombie smasher shield in 2d.
 
 ### Low
-  * Seriously fix some gfx.
+  * Add graveyard effects.
+  * Seriously fix some cavern gfx.
   * HOly crap refactor this garbage.

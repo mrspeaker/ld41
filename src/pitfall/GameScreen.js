@@ -38,8 +38,17 @@ class GameScreen extends Container {
   addBaddie() {
     const { player, baddies, map, camera } = this;
     const z = baddies.add(new Zomb(map));
-    z.pos.copy(player.pos);
-
+    if (player.onLadder) {
+      const exit = map.getLadderExit(player.pos);
+      if (exit) {
+        z.pos.copy(exit);
+      } else {
+        // Stuck on ladder!
+        z.pos.copy(player.pos);
+      }
+    } else {
+      z.pos.copy(player.pos);
+    }
     camera.flash();
   }
 
@@ -57,8 +66,8 @@ class GameScreen extends Container {
     });
 
     entity.hits(player, grail, g => {
+      // Should give ammo to player
       grail.remove(g);
-      console.log("get");
     });
   }
 }

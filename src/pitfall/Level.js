@@ -6,7 +6,15 @@ const tiles = new Texture("res/images/ld41-tiles.png");
 var tileIndexes = [
   { idx: 0, id: "empty", x: 0, y: 0, walkable: true },
   { idx: 1, id: "platform", x: 1, y: 0 },
-  { idx: 2, id: "ladderTop", x: 2, y: 0, walkable: true, climbable: true, cloud: true },
+  {
+    idx: 2,
+    id: "ladderTop",
+    x: 2,
+    y: 0,
+    walkable: true,
+    climbable: true,
+    cloud: true
+  },
   { idx: 3, id: "ladder", x: 3, y: 0, walkable: true, climbable: true },
   { idx: 4, id: "platform_ground", x: 1, y: 1 },
   { idx: 5, id: "ground", x: 1, y: 2 },
@@ -75,6 +83,31 @@ class Level extends TileMap {
       }
     }
     return { x: x * tileW, y: y * tileH };
+  }
+  // Gets closest free spot - might not always work if no paltform next ot ladder.
+  getLadderExit(pos) {
+    let { x, y } = this.pixelToMapPos(pos);
+    for (let i = 0; i < 5; i++) {
+      // Check up
+      let cell = this.tileAtMapPos({ x, y: y - i });
+      if (cell.frame.id === "platform" || cell.frame.id === "ladder_top") {
+        // Found the top. Is above it free?
+        const cell2 = this.tileAtMapPos({ x, y: y - i - 1 });
+        if (cell2 && cell2.frame.id === "empty") {
+          return this.mapToPixelPos({ x, y: y - i - 1 });
+        }
+      }
+
+      // Check down
+      cell = this.tileAtMapPos({ x, y: y + i });
+      if (cell.frame.id === "platform" || cell.frame.id === "platform_ground") {
+        // Found the top. Is above it free?
+        const cell2 = this.tileAtMapPos({ x, y: y + i - 1 });
+        if (cell2 && cell2.frame.id === "empty") {
+          return this.mapToPixelPos({ x, y: y + i - 1 });
+        }
+      }
+    }
   }
 }
 
