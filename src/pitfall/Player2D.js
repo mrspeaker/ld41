@@ -25,15 +25,16 @@ class Player2D extends TileSprite {
     this.onGameOver = onGameOver;
   }
 
-  hitBy(b) {
+  hitBy() {
     if (this.invincible > 0) {
-      return;
+      return false;
     }
     if (--this.hp <= 0) {
       this.onGameOver();
-      return;
+      return false;
     }
-    this.invincible = 2;
+    this.invincible = 3;
+    return true;
   }
 
   update(dt, t) {

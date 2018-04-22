@@ -57,13 +57,15 @@ class GameScreen extends Container {
 
   update (dt, t) {
     super.update(dt, t);
-    const { baddies, player, grail } = this;
+    const { baddies, player, grail, camera } = this;
 
     entity.hits(player, baddies, b => {
       if (!b.state.is("SWARM")) {
         return;
       }
-      player.hitBy(b);
+      if (player.hitBy(b)) {
+        camera.shake(15);
+      }
       b.dead = true;
       baddies.remove(b);
     });
