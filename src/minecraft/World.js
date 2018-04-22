@@ -1,6 +1,6 @@
 import ChunkModel from "./models/ChunkModel.js";
 import Billboard from "./models/Billboard.js";
-
+import Bullet from "./entities/Bullet.js";
 
 import Chunk from "./Chunk.js";
 
@@ -31,6 +31,7 @@ class World {
       z.scale.set(3, 3, 1);
       return z;
     });
+    this.bullets = [];
   }
 
   update() {
@@ -73,10 +74,10 @@ class World {
     return chunk;
   }
 
-  gen(initDensity) {
+  gen(initDensity = 40) {
     const { chunks } = this;
     const simplex = new SimplexNoise();
-    const density = 40;//initDensity || Math.random() * Math.random() * 40 + 6;
+    const density = initDensity;
     chunks.forEach(cr => {
       const { chunk } = cr;
       const AIR = 0;
@@ -91,8 +92,6 @@ class World {
 
         if (y < 1) return GRASS; // Ground
         let v = simplex.noise2D(x / density, z / density) * 4 + 2;
-        //const bowl = (Math.sin(x / 4) * Math.cos(z / 4)) * 16;
-        //if (y <= bowl) v = 0;
         const solid = y < v;// < Math.max(0, Math.min(1, Math.floor(v)));
         const isGrass = (v / 3) | (0 == 1);
         const isWood = (v | 0) % 3 == 2;

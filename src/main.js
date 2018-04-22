@@ -63,5 +63,6 @@ function preload() {
 }
 
 game.run((dt, t) => {
+  mcGame.update(dt, t);
   mcGame.state.webGLReady && mcGame.render(dt, t);
 });

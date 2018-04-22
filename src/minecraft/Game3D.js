@@ -9,9 +9,9 @@ import Camera from "./Camera.js";
 import World from "./World.js";
 import Player from "./Player.js";
 import Cube from "./models/Cube.js";
-import Ray from "./math/Ray.js";
+//import Ray from "./math/Ray.js";
 import glUtils from "./glUtils.js";
-import digAndBuild from "./digAndBuild.js";
+//import digAndBuild from "./digAndBuild.js";
 
 const deb1 = document.querySelector("#deb1");
 const ad1 = document.querySelector("#ad");
@@ -45,11 +45,11 @@ class Game3D {
     const world = new World(gl);
     const player = new Player(controls, camera, world);
     player.pos.set(3, 19, 0.3);
-    this.ray = new Ray(camera);
-    const cursor = Cube.create(gl);
-    cursor.scale.set(1.001, 1.001, 1.001);
-    cursor.mesh.doBlending = true;
-    cursor.mesh.noCulling = false;
+    // this.ray = new Ray(camera);
+    // const cursor = Cube.create(gl);
+    // cursor.scale.set(1.001, 1.001, 1.001);
+    // cursor.mesh.doBlending = true;
+    // cursor.mesh.noCulling = false;
 
     this.state = {
       lastGen: Date.now(),
@@ -60,7 +60,7 @@ class Game3D {
     this.player = player;
     this.camera = camera;
     this.controls = controls;
-    this.cursor = cursor;
+    //this.cursor = cursor;
   }
 
   init(res) {
@@ -86,32 +86,22 @@ class Game3D {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     // Set up initial chunks with density 10
-    world.gen(10);
+    world.gen(20);
   }
 
-  render(dt, t) {
+  update(dt) {
     const {
       player,
       world,
-      gl,
       camera,
       state,
-      ray,
       controls,
-      cursor,
-      shaders,
-      skybox
     } = this;
+
     player.update(dt);
     world.update(dt);
 
     const { pos } = player;
-
-    gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
-
-    // Sync camera to player
-    camera.transform.position.setv(pos).add(0, player.h / 2, 0);
-    camera.updateViewMatrix();
 
     const regenWorld = () => {
       controls.keys.keys[69] = false;
@@ -127,26 +117,61 @@ class Game3D {
       }
     }
 
-    // Get block player is looking at
-    const r = ray.fromScreen(
-      gl.canvas.width / 2,
-      gl.canvas.height / 2,
-      gl.canvas.width,
-      gl.canvas.height
-    );
-
-    const block = world.getCellFromRay(camera.transform.position, r.ray);
-    if (block) {
-      digAndBuild(block, controls, world, player);
-      cursor.position.set(block.x, block.y, block.z);
-      cursor.position.add(0.5, 0.5, 0.5);
+    if (controls.mouse.isDown) {
+      controls.mouse.isDown = false;
     }
 
-    if (world.didTriggerAd(player.pos)) {
+    world.zomb.forEach(z => {
+      const dx = camera.transform.position.x - z.position.x;
+      const dz = camera.transform.position.z - z.position.z;
+      const a = Math.atan2(dx, dz);
+      z.rotation.y = a * (180 / Math.PI);
+    });
+
+    // // Get block player is looking at
+    // const r = ray.fromScreen(
+    //   gl.canvas.width / 2,
+    //   gl.canvas.height / 2,
+    //   gl.canvas.width,
+    //   gl.canvas.height
+    // );
+    //
+    // const block = world.getCellFromRay(camera.transform.position, r.ray);
+    // if (block) {
+    //   digAndBuild(block, controls, world, player);
+    //   cursor.position.set(block.x, block.y, block.z);
+    //   cursor.position.add(0.5, 0.5, 0.5);
+    // }
+
+    if (world.didTriggerAd(pos)) {
       ad1.style.display = "block";
     } else {
       ad1.style.display = "none";
     }
+
+    // Debug
+    const chunk = world.getChunk(pos.x, pos.y, pos.z);
+    const p = `${pos.x.toFixed(2)}:${pos.y.toFixed(2)}:${pos.z.toFixed(2)}`;
+    deb1.innerHTML = `${p}<br/>${
+      !chunk ? "-" : `${chunk.chunk.chX}:${chunk.chunk.chY}:${chunk.chunk.chZ}`
+    }<br/>`;
+  }
+
+  render(dt, t) {
+    const {
+      player,
+      world,
+      gl,
+      camera,
+      shaders,
+      skybox
+    } = this;
+
+    gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+
+    // Sync camera to player
+    camera.transform.position.setv(player.pos).add(0, player.h / 2, 0);
+    camera.updateViewMatrix();
 
     // Render
     shaders.skybox
@@ -159,24 +184,17 @@ class Game3D {
       .preRender("camera", camera.view)
       .render(world.chunks);
 
-    shaders.debug
-      .activate()
-      .preRender(
-        "camera",
-        camera.view,
-        "colour",
-        [1.0, 1.0, 0.0, 0.1],
-        "useTex",
-        0.0
-      )
-      .render(cursor);
-
-    world.zomb.forEach(z => {
-      const dx = camera.transform.position.x - z.position.x;
-      const dz = camera.transform.position.z - z.position.z;
-      const a = Math.atan2(dx, dz);
-      z.rotation.y = a * (180 / Math.PI);
-    });
+    // shaders.debug
+    //   .activate()
+    //   .preRender(
+    //     "camera",
+    //     camera.view,
+    //     "colour",
+    //     [1.0, 1.0, 0.0, 0.1],
+    //     "useTex",
+    //     0.0
+    //   )
+    //   .render(cursor);
 
     shaders.billboard
       .activate()
@@ -191,13 +209,6 @@ class Game3D {
         1.0
       )
       .render(world.zomb);
-
-    // Debug
-    const chunk = world.getChunk(pos.x, pos.y, pos.z);
-    const p = `${pos.x.toFixed(2)}:${pos.y.toFixed(2)}:${pos.z.toFixed(2)}`;
-    deb1.innerHTML = `${p}<br/>${
-      !chunk ? "-" : `${chunk.chunk.chX}:${chunk.chunk.chY}:${chunk.chunk.chZ}`
-    }<br/>`;
   }
 }
 

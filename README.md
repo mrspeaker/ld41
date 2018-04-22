@@ -24,11 +24,27 @@ Hard parts:
   * Making terrain that is lets player concetrate on foreground for long enough
   * proc-gen the foregraound map?
 
-TODO:
-  * add gravity to ladders:
+## TODO
+
+### Super high
+  * Shooting
+  * ghosties have to move towards you.
+  * Sync baddies in both worlds (maybe esier is if they get close, they switch to 2d)
+  * Pickup end goal
+  * Do end screen
+
+### Pretty High  
+  * 3D COllisions with HP hits.
+  * 2D collision hits.
+
+### High
+  * add gravity to ladders: (hmm, maybe not necessary... test.)
     * but stop at edges.
   * Move level to Tiled (don't think theres time for proc gen?)
-  * Pick palletes for fore vs background. weird because caverns should be dark, but i need them to be light
-  * quick refactor of my frankenstein prototype
-  * Add win screen/restart when get to top of ladders.
-  * billboard sprites in back.
+  * Theme song: GnG rip
+  * Rotoscope ghosts
+
+### Low
+  * Seriously fix some gfx.
+  * Add comet from Fortnite to skybox
+  * HOly crap refactor this garbage.
