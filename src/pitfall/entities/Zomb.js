@@ -1,5 +1,5 @@
 import pop from "../../../pop/index.js";
-const { Texture, TileSprite, State, math } = pop;
+const { AnimManager, Texture, TileSprite, State, math } = pop;
 
 const playerTex = new Texture("res/images/ghostbuster.png");
 
@@ -21,10 +21,16 @@ class Zomb extends TileSprite {
     this.state = new State("INIT");
     this.frame.y = 2;
     this.frame.x = 0;
+
+    this.anims = new AnimManager(this);
+    this.anims.add("walk", [0, 1, 2, 1].map(x => ({ x, y: 2 })), 0.2);
+    this.anims.add("splode", [0, 1, 2, 3, 4].map(x => ({ x, y: 3 })), 0.1);
+    this.anims.play("walk");
   }
   update(dt, t) {
-    const { state } = this;
+    const { state, anims } = this;
     state.update(dt);
+    anims.update(dt);
     switch (state.get()) {
       case "INIT":
         state.set("BIRTH");
@@ -39,7 +45,22 @@ class Zomb extends TileSprite {
       case "SWARM":
         this.updateSwarm(dt, t);
         break;
+      case "SPLODE":
+        if (state.time > 1) {
+          state.set("DEAD");
+        }
+        this.pos.y -= 30 * dt;
+        this.opacity -= 1 * dt;
+        break;
+      case "DEAD":
+        this.dead = true;
+        break;
     }
+  }
+
+  kill() {
+    this.state.set("SPLODE");
+    this.anims.play("splode");
   }
 
   updateSwarm(dt, t) {
@@ -64,7 +85,7 @@ class Zomb extends TileSprite {
       vel.x *= -1;
     }
 
-    this.frame.x = (t * 5) % 2 | 0;
+    //this.frame.x = (t * 5) % 2 | 0;
   }
 }
 export default Zomb;

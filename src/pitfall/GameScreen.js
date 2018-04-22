@@ -66,13 +66,12 @@ class GameScreen extends Container {
       if (player.hitBy(b)) {
         camera.shake(15);
       }
-      b.dead = true;
-      baddies.remove(b);
+      b.kill();
     });
 
     entity.hits(player, grail, g => {
       // Should give ammo to player
-      grail.remove(g);
+      g.dead = true;//remove(g);
     });
   }
 }

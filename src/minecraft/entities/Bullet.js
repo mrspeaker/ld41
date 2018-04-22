@@ -15,7 +15,7 @@ class Bullet {
       z: ray.ray.z * (180 / Math.PI)
     };
     cube.rotation.setv(ray.ray).scale(180 / Math.PI);
-    cube.position.addv(ray.ray.scale(1));
+    cube.position.addv(ray.ray.scale(0.3));
   }
 
   update(dt) {
