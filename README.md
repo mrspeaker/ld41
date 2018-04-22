@@ -1,5 +1,9 @@
 # LD41
 
+*NOTE: very important!* The code you find here is more zombified than the walking dead. It was mashed together extremely quickly and will little regard for the find history of the art of computer science. I'm sorry.  
+
+## Notes
+
 two games overlaayed on each other.
 minecraft in background, pitfall II in foreground
 
@@ -29,7 +33,6 @@ Hard parts:
 ### Super high
   * Pickup end goals
   * Do end screen
-  * stop double-jumps
   * 2D collision hits: gameover.
 
 ### Pretty High  

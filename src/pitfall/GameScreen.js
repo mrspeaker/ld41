@@ -36,9 +36,11 @@ class GameScreen extends Container {
   }
 
   addBaddie() {
-    const { player, baddies, map } = this;
+    const { player, baddies, map, camera } = this;
     const z = baddies.add(new Zomb(map));
     z.pos.copy(player.pos);
+
+    camera.flash();
   }
 
   update (dt, t) {

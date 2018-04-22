@@ -69,8 +69,9 @@ class Player {
     }
 
     // Jump everybody
-    if (keys.isDown(32) && vel.y <= 0) {
+    if (keys.isDown(32) && this.onGround) {
       acc.y = 0.25; // jump force
+      this.onGround = false;
     }
     vel.y += acc.y;
     vel.y -= dt * 0.75; // gravity;
@@ -116,10 +117,10 @@ class Player {
     const w = this.w / 2;
     const h = this.h / 2;
     [
-      { x: pos.x - w, y: pos.y - h, z: pos.z - w },
-      { x: pos.x + w, y: pos.y - h, z: pos.z - w },
-      { x: pos.x - w, y: pos.y - h, z: pos.z + w },
-      { x: pos.x + w, y: pos.y - h, z: pos.z + w },
+      { x: pos.x - w, y: pos.y - h, z: pos.z - w, feet: true },
+      { x: pos.x + w, y: pos.y - h, z: pos.z - w, feet: true },
+      { x: pos.x - w, y: pos.y - h, z: pos.z + w, feet: true },
+      { x: pos.x + w, y: pos.y - h, z: pos.z + w, feet: true },
       { x: pos.x - w, y: pos.y + 0, z: pos.z - w },
       { x: pos.x + w, y: pos.y + 0, z: pos.z - w },
       { x: pos.x - w, y: pos.y + 0, z: pos.z + w },
@@ -128,7 +129,7 @@ class Player {
       { x: pos.x + w, y: pos.y + h, z: pos.z - w, top: true },
       { x: pos.x - w, y: pos.y + h, z: pos.z + w, top: true },
       { x: pos.x + w, y: pos.y + h, z: pos.z + w, top: true }
-    ].forEach(({ x, y, z, top }) => {
+    ].forEach(({ x, y, z, top, feet }) => {
       if (xo != 0 && world.getCell(x + xo, y, z)) xo = 0;
       if (zo != 0 && world.getCell(x + xo, y, z + zo)) zo = 0;
       if (yo != 0 && world.getCell(x + xo, y + yo, z + zo)) {
@@ -137,6 +138,10 @@ class Player {
         if (top || vel.y <= 0) {
           yo = 0;
           vel.y = 0;
+        }
+
+        if (feet) {
+          this.onGround = true;
         }
       }
     });
