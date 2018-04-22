@@ -1,4 +1,5 @@
 import Assets from "./Assets.js";
+import AnimManager from "./AnimManager.js";
 import Camera from "./Camera.js";
 import CanvasRenderer from "./renderer/CanvasRenderer.js";
 import Container from "./Container.js";
@@ -30,6 +31,7 @@ import webAudio from "./sound/webAudio.js";
 
 export default {
   Assets,
+  AnimManager,
   Camera,
   CanvasRenderer,
   Container,
