@@ -145,6 +145,8 @@ class Game3D {
       bullets.push(b);
     }
 
+    let v = new Vec3();
+    world.col = [];
     this.zomb = zomb.filter(z => {
       z.update(dt, t);
 
@@ -153,6 +155,16 @@ class Game3D {
       const dz = camera.transform.position.z - z.cube.position.z;
       const a = Math.atan2(dx, dz);
       z.cube.rotation.y = a * (180 / Math.PI);
+
+      const dist = v.setv(z.cube.position)
+        .scale(-1)
+        .addv(player.pos)
+        .lengthSq();
+      if (dist < 2) {
+        world.col.push({dist, z});
+        z.dead = true;
+      }
+
       return !z.dead;
     });
 
@@ -160,12 +172,13 @@ class Game3D {
       b.update(dt);
 
       zomb.forEach(z => {
+        if (b.dead) return;
         const dx = camera.transform.position.x - z.cube.position.x;
         const dz = camera.transform.position.z - z.cube.position.z;
         const a = Math.atan2(dx, dz);
         z.cube.rotation.y = a * (180 / Math.PI);
 
-        const dist = Vec3.from(z.cube.position)
+        const dist = v.setv(z.cube.position)
           .scale(-1)
           .addv(b.cube.position)
           .lengthSq();

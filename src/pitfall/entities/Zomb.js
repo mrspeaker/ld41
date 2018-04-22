@@ -1,4 +1,4 @@
-import pop from "../../pop/index.js";
+import pop from "../../../pop/index.js";
 const { Texture, Sprite } = pop;
 
 const playerTex = new Texture("res/images/greona.png");

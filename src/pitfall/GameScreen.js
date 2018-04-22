@@ -3,6 +3,7 @@ const { Container, Camera, KeyControls } = pop;
 
 import Player2D from "./Player2D.js";
 import Level from "./Level.js";
+import Zomb from "./entities/Zomb.js";
 
 class GameScreen extends Container {
   constructor(w, h) {
@@ -14,6 +15,7 @@ class GameScreen extends Container {
 
     this.add(camera);
     camera.add(map);
+    this.baddies = camera.add(new Container());
     camera.add(player);
 
     const { pos } = player;
@@ -24,6 +26,12 @@ class GameScreen extends Container {
     this.camera = camera;
     this.map = map;
 
+  }
+
+  addBaddie() {
+    const { player, baddies, map } = this;
+    const z = baddies.add(new Zomb(map));
+    z.pos.copy(player.pos);
   }
 }
 

@@ -54,5 +54,12 @@ function preload() {
 
 game.run((dt, t) => {
   mcGame.update(dt, t);
+
+  // Logic between worlds...
+  if (mcGame.world.col.length) {
+    game.scene.addBaddie();
+  }
+
+
   mcGame.state.webGLReady && mcGame.render(dt, t);
 });

@@ -4,7 +4,6 @@ import Chunk from "./Chunk.js";
 
 import SimplexNoise from "../../vendor/simplex-noise.js";
 import spiral2D from "./math/spiral2D.js";
-import Vec3 from "./math/Vec3.js";
 
 class World {
   constructor(gl, x = 16, y = 16, z = 16) {
