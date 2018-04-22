@@ -1,46 +1,15 @@
-import SkyboxShader from "./minecraft/shaders/SkyboxShader.js";
-import VoxelShader from "./minecraft/shaders/VoxelShader.js";
-import DebugShader from "./minecraft/shaders/DebugShader.js";
-import BillboardShader from "./minecraft/shaders/BillboardShader.js";
-import CameraController from "./minecraft/controls/CameraController.js";
-import KeyboardControls from "./minecraft/controls/KeyboardControls.js";
-
-import Camera from "./minecraft/Camera.js";
-import World from "./minecraft/World.js";
-import Player from "./minecraft/Player.js";
-import Cube from "./minecraft/models/Cube.js";
-import Ray from "./minecraft/math/Ray.js";
-import glUtils from "./minecraft/glUtils.js";
-import digAndBuild from "./minecraft/digAndBuild.js";
-import m4 from "../vendor/m4.js";
-
 import pop from "../pop/index.js";
 const { Game, Camera: TileCamera, KeyControls, math, Texture, Sprite } = pop;
+import m4 from "../vendor/m4.js";
 
-import Level from "./pitfall/Level.js";
+import Game3D from "./minecraft/Game3D.js";
 import Player2D from "./pitfall/Player2D.js";
+import Level from "./pitfall/Level.js";
 
 const pxWidth = 900;
 const pxHeight = 500;
 
-const gl = document.querySelector("#minecraft").getContext("webgl2");
-if (!gl) {
-  document.querySelector("#nosupport").style.display = "block";
-  document.querySelector("#nowebgl2").style.display = "inline";
-}
-glUtils.setSize(gl, pxWidth, pxHeight);
-document.onclick = () => gl.canvas.requestPointerLock();
-const deb1 = document.querySelector("#deb1");
-const ad1 = document.querySelector("#ad");
-
-const camera = new Camera(gl);
-console.log(camera);
-camera.mode = Camera.MODE_FREE;
-const controls = {
-  keys: new KeyboardControls(gl.canvas),
-  mouse: new CameraController(gl, camera)
-};
-
+const mcGame = new Game3D(pxWidth, pxHeight);
 const game = new Game(pxWidth, pxHeight, "#pitfall");
 const { scene, w, h } = game;
 
@@ -56,31 +25,10 @@ camera2D.add(player2D);
 const { pos } = player2D;
 pos.set(map.w / 2, map.h - map.tileH * 9);
 
-// Shaders
-const voxelShader = new VoxelShader(gl, camera.projectionMatrix);
-const skybox = Cube.create(gl, "Skybox", 300, 300, 300);
-const skyboxShader = new SkyboxShader(gl, camera.projectionMatrix);
-const debugShader = new DebugShader(gl, camera.projectionMatrix);
-const billboardShader = new BillboardShader(gl, camera.projectionMatrix);
-
-const world = new World(gl);
-const player = new Player(controls, camera, world);
-player.pos.set(3, 19, 0.3);
-const ray = new Ray(camera);
-const cursor = Cube.create(gl);
-cursor.scale.set(1.001, 1.001, 1.001);
-cursor.mesh.doBlending = true;
-cursor.mesh.noCulling = false;
-
-const state = {
-  lastGen: Date.now(),
-  webGLReady: false
-};
-
 // MAIN
 preload()
-  .then(initialize)
-  .then(() => (state.webGLReady = true));
+  .then((res) => mcGame.init(res))
+  .then(() => (mcGame.state.webGLReady = true));
 
 function preload() {
   const loadImg = src =>
@@ -114,121 +62,6 @@ function preload() {
   );
 }
 
-function initialize(res) {
-  // Textures
-  const texs = res.filter(i => i.type == "tex");
-  const imgs = res.filter(i => i.type == "img");
-
-  texs.forEach(i => glUtils.loadTexture(gl, i.name, i.img));
-
-  const cubeImg = imgs.filter(i => i.name.startsWith("cube")).map(i => i.img);
-  glUtils.loadCubeMap(gl, "skybox", cubeImg);
-  skyboxShader.setCube(glUtils.textures.skybox);
-  voxelShader.setTexture(glUtils.textures.blocks);
-  //debugShader.setTexture(glUtils.textures.ad);
-  billboardShader.setTexture(glUtils.textures.ad);
-
-  // Initialize webgl
-  gl.clearColor(1, 1, 1, 1.0);
-  gl.enable(gl.DEPTH_TEST);
-  gl.enable(gl.CULL_FACE);
-  gl.depthFunc(gl.LEQUAL);
-  gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-  // Set up initial chunks with density 10
-  world.gen(10);
-}
-//);
 game.run((dt, t) => {
-  state.webGLReady && renderWebGL(dt, t);
+  mcGame.state.webGLReady && mcGame.render(dt, t);
 });
-
-function renderWebGL(dt, t) {
-  player.update(dt);
-  world.update(dt);
-
-  const { pos } = player;
-
-  gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
-
-  // Sync camera to player
-  camera.transform.position.setv(pos).add(0, player.h / 2, 0);
-  camera.updateViewMatrix();
-
-  const regenWorld = () => {
-    controls.keys.keys[69] = false;
-    player.pos.set(3, 19, 0.3);
-    world.gen();
-    state.lastGen = Date.now();
-  };
-
-  // E key to gen new chunk
-  if (controls.keys.isDown(69)) {
-    if (Date.now() - state.lastGen > 1000) {
-      regenWorld();
-    }
-  }
-
-  // Get block player is looking at
-  const r = ray.fromScreen(
-    gl.canvas.width / 2,
-    gl.canvas.height / 2,
-    gl.canvas.width,
-    gl.canvas.height
-  );
-
-  const block = world.getCellFromRay(camera.transform.position, r.ray);
-  if (block) {
-    digAndBuild(block, controls, world, player);
-    cursor.position.set(block.x, block.y, block.z);
-    cursor.position.add(0.5, 0.5, 0.5);
-  }
-
-  if (world.didTriggerAd(player.pos)) {
-    ad1.style.display = "block";
-  } else {
-    ad1.style.display = "none";
-  }
-
-  // Render
-  skyboxShader
-    .activate()
-    .preRender("camera", camera.view, "t", t / 80)
-    .render(skybox);
-
-  voxelShader
-    .activate()
-    .preRender("camera", camera.view)
-    .render(world.chunks);
-
-  debugShader
-    .activate()
-    .preRender(
-      "camera",
-      camera.view,
-      "colour",
-      [1.0, 1.0, 0.0, 0.1],
-      "useTex",
-      0.0
-    )
-    .render(cursor);
-
-  world.zomb.forEach(z => {
-    const dx = camera.transform.position.x - z.position.x;
-    const dz = camera.transform.position.z - z.position.z;
-    const a = Math.atan2(dx, dz);
-    z.rotation.y = a * (180 / Math.PI);
-  });
-
-  billboardShader
-    .activate()
-    .preRender("camera", camera.view, "colour", [1, 1, 1, 0.1], "tex", 0, "useTex", 1.0)
-    .render(world.zomb);
-
-  // Debug
-  const chunk = world.getChunk(pos.x, pos.y, pos.z);
-  const p = `${pos.x.toFixed(2)}:${pos.y.toFixed(2)}:${pos.z.toFixed(2)}`;
-  deb1.innerHTML = `${p}<br/>${
-    !chunk ? "-" : `${chunk.chunk.chX}:${chunk.chunk.chY}:${chunk.chunk.chZ}`
-  }<br/>`;
-}
