@@ -4,7 +4,7 @@ const { AnimManager, Texture, TileSprite, wallslideWithLadders } = pop;
 const playerTex = new Texture("res/images/ghostbuster.png");
 
 class Player2D extends TileSprite {
-  constructor(controls, map) {
+  constructor(controls, map, onGameOver) {
     super(playerTex, 32, 32);
     this.hitBox = {
       x: 4,
@@ -20,8 +20,23 @@ class Player2D extends TileSprite {
 
     this.controls = controls;
     this.map = map;
+    this.hp = 2;
+    this.invincible = 0;
+    this.onGameOver = onGameOver;
   }
-  update(dt) {
+
+  hitBy(b) {
+    if (this.invincible > 0) {
+      return;
+    }
+    if (--this.hp <= 0) {
+      this.onGameOver();
+      return;
+    }
+    this.invincible = 2;
+  }
+
+  update(dt, t) {
     const { pos, controls, map, anims } = this;
     const { x, y } = controls;
     const xo = 100 * dt * Math.sign(x);
@@ -31,6 +46,14 @@ class Player2D extends TileSprite {
       pos.x += r.x;
     }
     pos.y += r.y;
+
+    if (this.invincible) {
+      this.visible = ((t * 10) % 2) | 0;
+      this.invincible -= dt;
+      if (this.invincible <= 0) {
+        this.visible = true;
+      }
+    }
 
     if (!this.onLadder) {
       if (!x) anims.play("idle");
@@ -45,7 +68,8 @@ class Player2D extends TileSprite {
         }
       }
     } else {
-      if (y) anims.play("climb");
+      if (!y) anims.stop();
+      else anims.play("climb");
     }
     anims.update(dt);
   }

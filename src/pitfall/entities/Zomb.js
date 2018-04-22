@@ -1,5 +1,5 @@
 import pop from "../../../pop/index.js";
-const { Texture, Sprite, State } = pop;
+const { Texture, Sprite, State, math } = pop;
 
 const playerTex = new Texture("res/images/greona.png");
 
@@ -12,8 +12,9 @@ class Zomb extends Sprite {
       w: 10,
       h: 20
     };
+    const speed = math.rand(40, 80);
     this.vel = {
-      x: 50,
+      x: math.randOneIn(2) ? -speed : speed,
       y: 0
     };
     this.map = map;

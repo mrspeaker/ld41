@@ -7,17 +7,17 @@ import Zomb from "./entities/Zomb.js";
 import Grail from "./entities/Grail.js";
 
 class GameScreen extends Container {
-  constructor(w, h) {
+  constructor(w, h, onGameOver) {
     super();
     const controls = new KeyControls();
     const map = new Level();
-    const player = new Player2D(controls, map);
+    const player = new Player2D(controls, map, onGameOver);
     const camera = new Camera(player, { w, h }, { w: map.w, h: map.h });
 
     this.add(camera);
     camera.add(map);
-    this.baddies = camera.add(new Container());
     this.grail = camera.add(new Container());
+    this.baddies = camera.add(new Container());
     camera.add(player);
 
     const { pos } = player;
@@ -46,6 +46,15 @@ class GameScreen extends Container {
   update (dt, t) {
     super.update(dt, t);
     const { baddies, player, grail } = this;
+
+    entity.hits(player, baddies, b => {
+      if (!b.state.is("SWARM")) {
+        return;
+      }
+      player.hitBy(b);
+      b.dead = true;
+      baddies.remove(b);
+    });
 
     entity.hits(player, grail, g => {
       grail.remove(g);

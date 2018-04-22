@@ -31,9 +31,10 @@ Hard parts:
 ## TODO
 
 ### Super high
-  * Pickup end goals
   * Do end screen
+  * what to do when 2d spawn on ladder?
   * 2D collision hits: gameover.
+  * Fix edges of world: hard stop, or make bigger, or whateves.
 
 ### Pretty High  
   * health pickups from

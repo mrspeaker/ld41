@@ -6,7 +6,7 @@ const tiles = new Texture("res/images/ld41-tiles.png");
 var tileIndexes = [
   { idx: 0, id: "empty", x: 0, y: 0, walkable: true },
   { idx: 1, id: "platform", x: 1, y: 0 },
-  { idx: 2, id: "ladderTop", x: 2, y: 0, walkable: true, climbable: true },
+  { idx: 2, id: "ladderTop", x: 2, y: 0, walkable: true, climbable: true, cloud: true },
   { idx: 3, id: "ladder", x: 3, y: 0, walkable: true, climbable: true },
   { idx: 4, id: "platform_ground", x: 1, y: 1 },
   { idx: 5, id: "ground", x: 1, y: 2 },

@@ -1,6 +1,5 @@
 import pop from "../pop/index.js";
-const { Game, Camera: TileCamera, KeyControls, math, Texture, Sprite } = pop;
-import m4 from "../vendor/m4.js";
+const { Game} = pop;
 
 import Game3D from "./minecraft/Game3D.js";
 import GameScreen from "./pitfall/GameScreen.js";
@@ -10,14 +9,21 @@ const pxHeight = 500;
 
 const mcGame = new Game3D(pxWidth, pxHeight);
 const game = new Game(pxWidth, pxHeight, "#pitfall");
-const { scene, w, h } = game;
+const { w, h } = game;
 
-game.scene = new GameScreen(w, h);
+function newGame(reset3D) {
+  if (reset3D) {
+    mcGame.reset();
+  }
+  game.scene = new GameScreen(w, h, () => newGame(true));
+}
 
 // MAIN
 preload()
   .then((res) => mcGame.init(res))
-  .then(() => (mcGame.state.webGLReady = true));
+  .then(() => {
+    newGame(false);
+  });
 
 function preload() {
   const loadImg = src =>
@@ -61,5 +67,5 @@ game.run((dt, t) => {
   }
 
 
-  mcGame.state.webGLReady && mcGame.render(dt, t);
+  mcGame.render(dt, t);
 });

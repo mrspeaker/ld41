@@ -45,34 +45,47 @@ class Game3D {
     };
     this.skybox = Cube.create(gl, "Skybox", 300, 300, 300);
 
-    const world = new World(gl);
-    const player = new Player(controls, camera, world);
-    player.pos.set(3, 19, 0.3);
     this.ray = new Ray(camera);
     // const cursor = Cube.create(gl);
     // cursor.scale.set(1.001, 1.001, 1.001);
     // cursor.mesh.doBlending = true;
     // cursor.mesh.noCulling = false;
 
+
+    this.camera = camera;
+    this.controls = controls;
+    //this.cursor = cursor;
     this.state = {
-      lastGen: Date.now(),
-      webGLReady: false
-    };
+
+    }
+    this.reset();
+  }
+
+  reset() {
+    const { camera, controls, gl } = this;
+
+    const world = new World(gl);
+    world.gen(20);
+
+    const player = new Player(controls, camera, world);
+    player.pos.set(3, 19, 0.3);
+
+    this.state.lastGen = Date.now();
 
     this.zomb = [...Array(10)].map(() => {
       return new Zomb(gl, player.pos, world);
     });
     this.bullets = [];
-
     this.world = world;
     this.player = player;
-    this.camera = camera;
-    this.controls = controls;
-    //this.cursor = cursor;
+
+    this.zomb.forEach(z => {
+      z.cube.position.set(...world.getFreeSpot());
+    });
   }
 
   init(res) {
-    const { gl, shaders, world } = this;
+    const { gl, shaders } = this;
     // Textures
     const texs = res.filter(i => i.type == "tex");
     const imgs = res.filter(i => i.type == "img");
@@ -93,12 +106,6 @@ class Game3D {
     gl.depthFunc(gl.LEQUAL);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-    // Set up initial chunks with density 10
-    world.gen(20);
-
-    this.zomb.forEach(z => {
-      z.cube.position.set(...world.getFreeSpot());
-    });
   }
 
   update(dt, t) {
