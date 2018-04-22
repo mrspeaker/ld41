@@ -27,7 +27,7 @@ Hard parts:
 ## TODO
 
 ### Super high
-  * Sync baddies in both worlds: if they get close, they switch to 2d
+  * 2d traverse platforms.
   * Pickup end goals
   * Do end screen
   * stop double-jumps
@@ -36,6 +36,8 @@ Hard parts:
   * 2D collision hits.
   * health pickups from
   * ghosties walk up blocks.
+  * "danger" warning when 3d baddie near
+  * screen flash when new baddie
 
 ### High
   * Move level to Tiled if there's time
