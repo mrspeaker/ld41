@@ -6,6 +6,7 @@ class CameraController {
     this.rotateRate = -150;
     this.zoomRate = 200;
 
+    this.enabled = true;
     const box = this.canvas.getBoundingClientRect();
     this.offsetX = box.left;
     this.offsetY = box.right;
@@ -50,6 +51,7 @@ class CameraController {
   }
 
   onMouseDown(e) {
+    if (!this.enabled) return;
     this.isDown = true;
     this.isRight = e.which === 3;
   }
@@ -60,6 +62,7 @@ class CameraController {
   }
 
   onMouseMove(e) {
+    if (!this.enabled) return;
     const { camera, rotateRate, canvas } = this;
     const dx = e.movementX;
     const dy = e.movementY;
@@ -73,6 +76,7 @@ class CameraController {
   }
 
   onMouseWheel(e) {
+    if (!this.enabled) return;
     const delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
     this.camera.panZ(delta * (this.zoomRate / this.canvas.height));
   }

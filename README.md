@@ -31,10 +31,8 @@ Hard parts:
 ## TODO
 
 ### Super high
-  * intro screen
-  * Do gameover/reset screen
-  * Do win screen
-  * can't go out edges in 2d.
+  * Do gameover
+  * can't go out edges in 2d, can't go on straight ladders.
 
 ### Pretty High  
   * intro - teach... pretty important cause this is HARD

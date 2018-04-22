@@ -46,18 +46,10 @@ class Game3D {
     this.skybox = Cube.create(gl, "Skybox", 300, 300, 300);
 
     this.ray = new Ray(camera);
-    // const cursor = Cube.create(gl);
-    // cursor.scale.set(1.001, 1.001, 1.001);
-    // cursor.mesh.doBlending = true;
-    // cursor.mesh.noCulling = false;
-
 
     this.camera = camera;
     this.controls = controls;
-    //this.cursor = cursor;
-    this.state = {
-
-    };
+    this.state = {};
     this.reset();
   }
 
@@ -78,7 +70,15 @@ class Game3D {
     this.player = player;
 
     this.zomb = [];
-    [...Array(5)].map(() => this.spawn());
+    this.isDead = false;
+    this.isWin = false;
+    controls.mouse.enabled = true;
+  }
+
+  clear() {
+    const { gl } = this;
+    gl.clearColor(0, 0, 0, 1.0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
   }
 
   spawn() {
@@ -87,7 +87,7 @@ class Game3D {
     let spot;
     while (!spot) {
       const spotArray = world.getFreeSpot();
-      spot = {x: spotArray[0], y: spotArray[1], z: spotArray[2]};
+      spot = { x: spotArray[0], y: spotArray[1], z: spotArray[2] };
       const dist = Vec3.from(spot)
         .scale(-1)
         .addv(player.pos)
@@ -95,7 +95,6 @@ class Game3D {
       if (dist < 150) {
         spot = null;
       }
-
     }
     z.cube.position.setv(spot);
     zomb.push(z);
@@ -114,16 +113,14 @@ class Game3D {
     glUtils.loadCubeMap(gl, "skybox", cubeImg);
     shaders.skybox.setCube(glUtils.textures.skybox);
     shaders.voxel.setTexture(glUtils.textures.blocks);
-    //debugShader.setTexture(glUtils.textures.ad);
     shaders.billboard.setTexture(glUtils.textures.ringu);
 
     // Initialize webgl
-    gl.clearColor(1, 1, 1, 1.0);
+    gl.clearColor(0, 0, 0, 1.0);
     gl.enable(gl.DEPTH_TEST);
     gl.enable(gl.CULL_FACE);
     gl.depthFunc(gl.LEQUAL);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
   }
 
   update(dt, t) {
@@ -136,35 +133,25 @@ class Game3D {
       zomb,
       bullets,
       ray,
-      gl
+      gl,
+      isDead,
+      isWin
     } = this;
 
-    player.update(dt);
+    if (!isDead) {
+      player.update(dt);
+    } else {
+      controls.mouse.enabled = false;
+    }
     world.update(dt);
-
-    const { pos } = player;
 
     state.lastSpawn += dt;
     if (state.lastSpawn > 2) {
-      this.spawn();
+      if (!isWin) this.spawn();
       state.lastSpawn = 0;
     }
 
-    const regenWorld = () => {
-      controls.keys.keys[69] = false;
-      player.pos.set(3, 19, 0.3);
-      world.gen();
-      state.lastGen = Date.now();
-    };
-
-    // E key to gen new chunk
-    if (controls.keys.isDown(69)) {
-      if (Date.now() - state.lastGen > 1000) {
-        regenWorld();
-      }
-    }
-
-    if (controls.mouse.isDown) {
+    if (controls.mouse.isDown && !isWin) {
       controls.mouse.isDown = false;
       const r = ray.fromScreen(
         gl.canvas.width / 2,
@@ -180,6 +167,11 @@ class Game3D {
     this.closest = 100;
     world.col = [];
     this.zomb = zomb.filter(z => {
+
+      if (isWin) {
+        z.cube.position.y += 1 * dt;
+        return true;
+      }
       z.update(dt, t);
 
       // Face camera
@@ -188,12 +180,13 @@ class Game3D {
       const a = Math.atan2(dx, dz);
       z.cube.rotation.y = a * (180 / Math.PI);
 
-      const dist = v.setv(z.cube.position)
+      const dist = v
+        .setv(z.cube.position)
         .scale(-1)
         .addv(player.pos)
         .lengthSq();
       if (dist < 2) {
-        world.col.push({dist, z});
+        world.col.push({ dist, z });
         z.dead = true;
       }
       if (dist < this.closest) {
@@ -212,7 +205,8 @@ class Game3D {
         const a = Math.atan2(dx, dz);
         z.cube.rotation.y = a * (180 / Math.PI);
 
-        const dist = v.setv(z.cube.position)
+        const dist = v
+          .setv(z.cube.position)
           .scale(-1)
           .addv(b.cube.position)
           .lengthSq();
@@ -221,19 +215,10 @@ class Game3D {
           z.dead = true;
           b.dead = true;
         }
-
-
       });
 
       return !b.dead;
     });
-
-    // Debug
-    const chunk = world.getChunk(pos.x, pos.y, pos.z);
-    const p = `${pos.x.toFixed(2)}:${pos.y.toFixed(2)}:${pos.z.toFixed(2)}`;
-    deb1.innerHTML = `${p}<br/>${
-      !chunk ? "-" : `${chunk.chunk.chX}:${chunk.chunk.chY}:${chunk.chunk.chZ}`
-    }<br/>`;
   }
 
   render(dt, t) {
@@ -253,7 +238,12 @@ class Game3D {
 
     shaders.voxel
       .activate()
-      .preRender("camera", camera.view, "warn", this.closest < 20 ? 1 - (this.closest/40)  : 0)
+      .preRender(
+        "camera",
+        camera.view,
+        "warn",
+        this.closest < 20 ? 1 - this.closest / 40 : 0
+      )
       .render(world.chunks);
 
     if (bullets.length) {
@@ -283,7 +273,7 @@ class Game3D {
           "useTex",
           1.0,
           "sprite",
-          [(t * 4) % 6 | 0, 0]
+          [((t * 4) % 6) | 0, 0]
         )
         .render(zomb.map(z => z.cube));
     }

@@ -23,14 +23,17 @@ class Player2D extends TileSprite {
     this.hp = 2;
     this.invincible = 0;
     this.onGameOver = onGameOver;
+    this.dead = false;
+    this.wins = false;
   }
 
   hitBy() {
-    if (this.invincible > 0) {
+    if (this.invincible > 0 || this.dead || this.wins) {
       return false;
     }
     if (--this.hp <= 0) {
       this.onGameOver();
+      this.dead = true;
       return false;
     }
     this.invincible = 3;
@@ -45,6 +48,9 @@ class Player2D extends TileSprite {
     const r = wallslideWithLadders(this, map, xo, yo);
     if (!this.onLadder) {
       pos.x += r.x;
+
+      // TODO: LOLOLOLOL... last minute fix for ladder climb teleport bug!
+      pos.x = Math.min(1540, pos.x);
     }
     pos.y += r.y;
 

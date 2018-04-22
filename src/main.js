@@ -1,8 +1,9 @@
 import pop from "../pop/index.js";
-const { Game} = pop;
+const { Game, KeyControls } = pop;
 
 import Game3D from "./minecraft/Game3D.js";
 import GameScreen from "./pitfall/GameScreen.js";
+import TitleScreen from "./TitleScreen.js";
 
 const pxWidth = 900;
 const pxHeight = 500;
@@ -10,19 +11,26 @@ const pxHeight = 500;
 const mcGame = new Game3D(pxWidth, pxHeight);
 const game = new Game(pxWidth, pxHeight, "#pitfall");
 const { w, h } = game;
+const controls = new KeyControls();
 
 function newGame(reset3D) {
   if (reset3D) {
     mcGame.reset();
   }
-  game.scene = new GameScreen(w, h, () => newGame(true));
+  game.scene = new GameScreen(w, h, controls, title);
+}
+
+function title() {
+  mcGame.clear();
+  game.scene = new TitleScreen(w, h, controls, () => newGame(true));
 }
 
 // MAIN
 preload()
-  .then((res) => mcGame.init(res))
+  .then(res => mcGame.init(res))
   .then(() => {
-    newGame(false);
+    //newGame(false);
+    title();
   });
 
 function preload() {
@@ -59,13 +67,20 @@ function preload() {
 }
 
 game.run((dt, t) => {
-  mcGame.update(dt, t);
+  if (game.scene && game.scene.name === "game2d") {
+    if (game.scene.state.is("DIE")) {
+      mcGame.isDead = true;
+    }
+    if (game.scene.state.is("WIN")) {
+      mcGame.isWin = true;
+    }
+    mcGame.update(dt, t);
 
-  // Logic between worlds...
-  if (mcGame.world.col.length) {
-    game.scene.addBaddie();
+    // Logic between worlds...
+    if (mcGame.world.col.length) {
+      game.scene.addBaddie();
+    }
+
+    mcGame.render(dt, t);
   }
-
-
-  mcGame.render(dt, t);
 });
