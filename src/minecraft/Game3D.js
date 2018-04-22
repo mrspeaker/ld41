@@ -14,11 +14,10 @@ import glUtils from "./glUtils.js";
 import Vec3 from "./math/Vec3.js";
 //import digAndBuild from "./digAndBuild.js";
 
-import Billboard from "./models/Billboard.js";
 import Bullet from "./entities/Bullet.js";
+import Zomb from "./entities/Zomb.js";
 
 const deb1 = document.querySelector("#deb1");
-const ad1 = document.querySelector("#ad");
 
 class Game3D {
   constructor(pxWidth, pxHeight) {
@@ -61,9 +60,10 @@ class Game3D {
     };
 
     this.zomb = [...Array(100)].map(() => {
-      const z = Billboard.create(gl);
-      z.scale.set(3, 3, 1);
-      return z;
+      return new Zomb(gl, player.pos);
+      // const z = Billboard.create(gl);
+      // z.scale.set(3, 3, 1);
+      // return z;
     });
     this.bullets = [];
 
@@ -100,12 +100,22 @@ class Game3D {
     world.gen(20);
 
     this.zomb.forEach(z => {
-      z.position.set(...world.getFreeSpot());
+      z.cube.position.set(...world.getFreeSpot());
     });
   }
 
-  update(dt) {
-    const { player, world, camera, state, controls, zomb, bullets, ray, gl } = this;
+  update(dt, t) {
+    const {
+      player,
+      world,
+      camera,
+      state,
+      controls,
+      zomb,
+      bullets,
+      ray,
+      gl
+    } = this;
 
     player.update(dt);
     world.update(dt);
@@ -139,10 +149,13 @@ class Game3D {
     }
 
     this.zomb = zomb.filter(z => {
-      const dx = camera.transform.position.x - z.position.x;
-      const dz = camera.transform.position.z - z.position.z;
+      z.update(dt, t);
+
+      // Face camera
+      const dx = camera.transform.position.x - z.cube.position.x;
+      const dz = camera.transform.position.z - z.cube.position.z;
       const a = Math.atan2(dx, dz);
-      z.rotation.y = a * (180 / Math.PI);
+      z.cube.rotation.y = a * (180 / Math.PI);
       return !z.dead;
     });
 
@@ -150,12 +163,12 @@ class Game3D {
       b.update(dt);
 
       zomb.forEach(z => {
-        const dx = camera.transform.position.x - z.position.x;
-        const dz = camera.transform.position.z - z.position.z;
+        const dx = camera.transform.position.x - z.cube.position.x;
+        const dz = camera.transform.position.z - z.cube.position.z;
         const a = Math.atan2(dx, dz);
-        z.rotation.y = a * (180 / Math.PI);
+        z.cube.rotation.y = a * (180 / Math.PI);
 
-        const dist = Vec3.from(z.position)
+        const dist = Vec3.from(z.cube.position)
           .scale(-1)
           .addv(b.cube.position)
           .lengthSq();
@@ -211,19 +224,21 @@ class Game3D {
         .render(bullets.map(b => b.cube));
     }
 
-    shaders.billboard
-      .activate()
-      .preRender(
-        "camera",
-        camera.view,
-        "colour",
-        [1, 1, 1, 0.1],
-        "tex",
-        0,
-        "useTex",
-        1.0
-      )
-      .render(zomb);
+    if (zomb.length) {
+      shaders.billboard
+        .activate()
+        .preRender(
+          "camera",
+          camera.view,
+          "colour",
+          [1, 1, 1, 0.1],
+          "tex",
+          0,
+          "useTex",
+          1.0
+        )
+        .render(zomb.map(z => z.cube));
+    }
   }
 }
 

@@ -27,19 +27,18 @@ Hard parts:
 ## TODO
 
 ### Super high
-  * Shooting
   * ghosties have to move towards you.
   * Sync baddies in both worlds (maybe esier is if they get close, they switch to 2d)
-  * Pickup end goal
+  * Pickup end goals
   * Do end screen
+  * stop double-jumps
 
 ### Pretty High  
   * 3D COllisions with HP hits.
   * 2D collision hits.
+  * health pickups from
 
 ### High
-  * add gravity to ladders: (hmm, maybe not necessary... test.)
-    * but stop at edges.
   * Move level to Tiled (don't think theres time for proc gen?)
   * Theme song: GnG rip
   * Rotoscope ghosts

@@ -27,8 +27,8 @@ const fss = `#version 300 es
     vec4 tx = texture(sky, texCoord);
     float rat = 1.0 - ((texCoord.y + 150.0) / 250.0);
     float m = max(0.0, rat - 0.2);
-    vec4 sky = vec4(0, 0.0, 0.3, 1.0);
-    col = mix(tx, sky, 0.3);
+    vec4 sky = vec4(0, 0.0, 0.0, 1.0);
+    col = mix(tx, sky, 0.5);
   }
 `;
 

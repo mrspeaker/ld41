@@ -40,7 +40,7 @@ const fss = `#version 300 es
       float fog = 1.0 - (clamp((far - dist) / (far - near), 0.0, 1.0));
       //vec4 tx = vec4(0.8, 0.5, 0.0, 1.0) * texture(tex0, texCoord);
       vec4 tx = vec4(0.5, 0.5, 0.5, 1.0) * texture(tex0, texCoord);
-      vec4 fogmix = mix(vec4(tx.x + (norm.z * -0.05), tx.yzw), vec4(65.0/255.0, 95.0/255.0, 0.8, 1.0), fog);
+      vec4 fogmix = mix(vec4(tx.x + (norm.z * -0.00), tx.yzw), vec4(0, 0, 0, 1.0), fog);// vec4(65.0/255.0, 95.0/255.0, 0.8, 1.0), fog);
       col= vec4(fogmix.rgb * occ, 1.0);
   }
 `;
