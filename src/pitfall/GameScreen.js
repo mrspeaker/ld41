@@ -1,10 +1,12 @@
 import pop from "../../pop/index.js";
-const { Container, Camera, KeyControls, entity } = pop;
+const { Container, Camera, KeyControls, entity, Sound } = pop;
 
 import Player2D from "./Player2D.js";
 import Level from "./Level.js";
 import Zomb from "./entities/Zomb.js";
 import Grail from "./entities/Grail.js";
+
+const laugh1 = new Sound("res/sounds/laugh2.mp3", {});
 
 class GameScreen extends Container {
   constructor(w, h, onGameOver) {
@@ -49,6 +51,7 @@ class GameScreen extends Container {
     } else {
       z.pos.copy(player.pos);
     }
+    laugh1.play();
     camera.flash();
   }
 

@@ -8,7 +8,7 @@ var tileIndexes = [
   { idx: 1, id: "platform", x: 1, y: 0 },
   {
     idx: 2,
-    id: "ladderTop",
+    id: "ladder_top",
     x: 2,
     y: 0,
     walkable: true,
@@ -93,17 +93,17 @@ class Level extends TileMap {
       if (cell.frame.id === "platform" || cell.frame.id === "ladder_top") {
         // Found the top. Is above it free?
         const cell2 = this.tileAtMapPos({ x, y: y - i - 1 });
-        if (cell2 && cell2.frame.id === "empty") {
+        if (cell2 && (cell2.frame.id === "empty" || cell2.frame.id === "ladder")) {
           return this.mapToPixelPos({ x, y: y - i - 1 });
         }
       }
 
       // Check down
       cell = this.tileAtMapPos({ x, y: y + i });
-      if (cell.frame.id === "platform" || cell.frame.id === "platform_ground") {
+      if (cell.frame.id === "platform" || cell.frame.id === "platform_ground" || cell.frame.id === "ground") {
         // Found the top. Is above it free?
         const cell2 = this.tileAtMapPos({ x, y: y + i - 1 });
-        if (cell2 && cell2.frame.id === "empty") {
+        if (cell2 && (cell2.frame.id === "empty" || cell2.frame.id === "ladder")) {
           return this.mapToPixelPos({ x, y: y + i - 1 });
         }
       }

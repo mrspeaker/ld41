@@ -1,11 +1,11 @@
 import pop from "../../../pop/index.js";
-const { Texture, Sprite, State, math } = pop;
+const { Texture, TileSprite, State, math } = pop;
 
-const playerTex = new Texture("res/images/greona.png");
+const playerTex = new Texture("res/images/ghostbuster.png");
 
-class Zomb extends Sprite {
+class Zomb extends TileSprite {
   constructor(map) {
-    super(playerTex);
+    super(playerTex, 32, 32);
     this.hitBox = {
       x: 4,
       y: 4,
@@ -19,6 +19,8 @@ class Zomb extends Sprite {
     };
     this.map = map;
     this.state = new State("INIT");
+    this.frame.y = 2;
+    this.frame.x = 0;
   }
   update(dt, t) {
     const { state } = this;
@@ -61,6 +63,8 @@ class Zomb extends Sprite {
     if (!nextTo || under) {
       vel.x *= -1;
     }
+
+    this.frame.x = (t * 5) % 2 | 0;
   }
 }
 export default Zomb;

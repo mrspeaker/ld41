@@ -164,6 +164,7 @@ class Game3D {
     }
 
     let v = new Vec3();
+    this.closest = 100;
     world.col = [];
     this.zomb = zomb.filter(z => {
       z.update(dt, t);
@@ -182,7 +183,9 @@ class Game3D {
         world.col.push({dist, z});
         z.dead = true;
       }
-
+      if (dist < this.closest) {
+        this.closest = dist;
+      }
       return !z.dead;
     });
 
@@ -205,6 +208,8 @@ class Game3D {
           z.dead = true;
           b.dead = true;
         }
+
+
       });
 
       return !b.dead;
@@ -235,7 +240,7 @@ class Game3D {
 
     shaders.voxel
       .activate()
-      .preRender("camera", camera.view)
+      .preRender("camera", camera.view, "warn", this.closest < 20 ? 1 - (this.closest/40)  : 0)
       .render(world.chunks);
 
     if (bullets.length) {
