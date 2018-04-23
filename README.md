@@ -2,6 +2,8 @@
 
 [Play Obaké right now!](https://mrspeaker.github.io/ld41/) or see the [Ludum Dare entry page](https://ldjam.com/events/ludum-dare/41/obake).
 
+[![obake in action](https://user-images.githubusercontent.com/129330/39125294-7d5b500c-46cc-11e8-9aed-2522e8797ea8.gif)](https://mrspeaker.github.io/ld41/)
+
 Through no fault of your own, the spirits have risen. Well, not risen - but inflated - into the third dimension. They are not happy and will seek to drag you forever into their flat lands.
 
 **Defend** yourself with your De-mension Gun (tm). If an obaké should touch you - it’s fine, don’t worry about it. BUT. It will materialize in the 2nd dimension: the only place it can destroy you.
@@ -17,10 +19,6 @@ In the **2nd Dimension**: W A S D will move you around the ladder-infested crypt
 In the **3rd Dimension**: W A S D will move you, mouse will look and shoot, and space to jump (or SMC: Standard Minecraft Controls)
 
 [![obake2](https://user-images.githubusercontent.com/129330/39103902-9942d502-467b-11e8-8a9a-e911641d4c31.png)](https://mrspeaker.github.io/ld41/)
-
-![obake in action](https://user-images.githubusercontent.com/129330/39125294-7d5b500c-46cc-11e8-9aed-2522e8797ea8.gif)
-
-
 
 ## Notes to self
 
