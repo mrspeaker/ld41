@@ -1,4 +1,7 @@
-# LD41
+# Obaké: a Ludum Dare 41 entry by Mr Speaker
+
+[Play Obaké right now!](https://mrspeaker.github.io/ld41/) or see the [Ludum Dare entry page](https://ldjam.com/events/ludum-dare/41/obake).
+
 
 *NOTE: very important!* The code you find here is more zombified than the walking dead. It was mashed together extremely quickly and will little regard for the find history of the art of computer science. I'm sorry.  
 

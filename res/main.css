@@ -5,13 +5,6 @@ body {
   background-color: #000;
   font-family: "Amatic SC" monospace;
 }
-#overlay {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  font-size: 9pt;
-  color: #ddd;
-}
 a {
   color: #242;
 }
