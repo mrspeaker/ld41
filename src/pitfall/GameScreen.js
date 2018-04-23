@@ -1,5 +1,15 @@
 import pop from "../../pop/index.js";
-const { Container, Camera, entity, Sound, State, Text, math, Texture, TileSprite } = pop;
+const {
+  Container,
+  Camera,
+  entity,
+  Sound,
+  State,
+  Text,
+  math,
+  Texture,
+  TileSprite
+} = pop;
 
 import Player2D from "./Player2D.js";
 import Level from "./Level.js";
@@ -7,10 +17,11 @@ import Zomb from "./entities/Zomb.js";
 import Grail from "./entities/Grail.js";
 import OneUp from "./entities/OneUp.js";
 
-
 const tiles = new Texture("res/images/ld41-tiles.png");
 
-const laugh1 = new Sound("res/sounds/laugh2.mp3", {});
+const laugh1 = new Sound("res/sounds/laugh.mp3", {});
+const getSound = new Sound("res/sounds/get1.mp3", {});
+const deadSound = new Sound("res/sounds/dead.mp3", {});
 
 class GameScreen extends Container {
   constructor(w, h, controls, onGameOver) {
@@ -20,7 +31,7 @@ class GameScreen extends Container {
     const map = new Level();
     const player = new Player2D(controls, map, () => {
       this.state.set("DIE");
-      this.setHearts();
+      this.playerGotWacked();
     });
     const camera = new Camera(player, { w, h }, { w: map.w, h: map.h });
 
@@ -43,20 +54,29 @@ class GameScreen extends Container {
     this.camera = camera;
     this.map = map;
 
-    this.remain = 20;
+    this.remain = 25;
     this.isWin = false;
     this.state = new State("INIT");
 
     this.hearts = this.add(new Container());
-    this.hearts.pos.x = 50;
-    this.hearts.pos.y = 50;
+    this.hearts.pos.x = 20;
+    this.hearts.pos.y = 20;
     this.setHearts();
+
+    this.msg = this.add(
+      new Text("", {
+        font: "bold 30pt 'Amatic SC', sans-serif",
+        fill: "#fff",
+        align: "center"
+      })
+    );
+    this.msg.pos.set(w / 2, h / 2 - 80);
   }
 
   setHearts() {
     const { player, hearts } = this;
     const { hp } = player;
-    hearts.map(h => h.dead = true);
+    hearts.map(h => (h.dead = true));
     [...Array(hp)].map((_, i) => {
       const t = new TileSprite(tiles, 32, 32);
       t.frame.x = 1;
@@ -64,6 +84,14 @@ class GameScreen extends Container {
       t.pos.x = i * 35;
       hearts.add(t);
     });
+    hearts
+      .add(
+        new Text(this.remain, {
+          font: "bold 25pt 'Amatic SC', sans-serif",
+          fill: "#fff"
+        })
+      )
+      .pos.set(70, 30);
   }
 
   addBaddie() {
@@ -91,7 +119,11 @@ class GameScreen extends Container {
     state.update(dt);
     switch (state.get()) {
       case "INIT":
-        state.set("PLAY");
+        this.msg.text = "Collect " + this.remain + " talismen. That's all.";
+        if (state.time > 4) {
+          this.msg.text = "";
+          state.set("PLAY");
+        }
         break;
       case "PLAY":
         this.updatePlay(dt, t);
@@ -116,7 +148,9 @@ class GameScreen extends Container {
 
         break;
       case "DIE":
+        this.msg.text = "You have died in 2D. The worst dimension."
         if (state.time > 5) {
+          this.msg.text = "";
           state.set("DEAD");
         }
         break;
@@ -126,6 +160,22 @@ class GameScreen extends Container {
     }
   }
 
+  playerGotWacked() {
+    const { camera, player } = this;
+    camera.shake(15);
+    this.setHearts();
+    deadSound.play();
+    const ou = camera.add(
+      new OneUp(
+        new Text("OUCH!", {
+          font: "bold 20pt 'Amatic SC', sans-serif",
+          fill: "#fff"
+        })
+      )
+    );
+    ou.pos.copy(player.pos);
+  }
+
   updatePlay() {
     const { baddies, player, grail, camera } = this;
     entity.hits(player, baddies, b => {
@@ -133,14 +183,15 @@ class GameScreen extends Container {
         return;
       }
       if (player.hitBy(b)) {
-        camera.shake(15);
-        this.setHearts();
+        this.playerGotWacked();
       }
       b.kill();
     });
 
     entity.hits(player, grail, g => {
       this.remain = Math.max(0, this.remain - 1);
+      this.setHearts();
+      getSound.play();
       const ou = camera.add(
         new OneUp(
           new Text(this.remain + "", {

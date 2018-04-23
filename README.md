@@ -16,8 +16,8 @@ If you get near a zombie in minecraft, it emerges from the ground (like how skel
 Issue: platformer is moving left and right primarily. Minecraft is forward and backward. This encourages/requires player to be strafing a lot. Need to make this a feature of the background game...
   * make obvious "spawn areas" - if you go near them then things will spawn, but otherwise it's pretty safe to concentrate on the foreground game. If you are going to run into somethig bad then you'll have to mouse around and strafe accordingly.
   * foreground should lock to edge if walking off - fall down holes though.
-  * backgroudn shouldn't "auto fall" on edges, else it will be annoying.
-  * Going up === going forward, so should be the norm. Going down == going backwards so is dangerous and ahrd in minecraft
+  * background shouldn't "auto fall" on edges, else it will be annoying.
+  * Going up === going forward, so should be the norm. Going down == going backwards so is dangerous and hard in minecraft
 
 Maybes:
   * pickups in foreground that teleport you in background.
@@ -36,6 +36,7 @@ Hard parts:
 
 ### Pretty High  
   * intro - teach... pretty important cause this is HARD
+  * some kind of fix for sitting on a ladder?
 
 ### High
   * make spawn tweaker: balance
@@ -46,3 +47,4 @@ Hard parts:
   * Add graveyard effects.
   * Seriously fix some cavern gfx.
   * HOly crap refactor this garbage.
+  * theres some gnarly ladder climb bugs - breaks if ladderTop has no neihbor on one side, also, see player.update: hard limit on right side of screen!

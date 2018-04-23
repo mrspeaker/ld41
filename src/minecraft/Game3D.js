@@ -14,10 +14,13 @@ import glUtils from "./glUtils.js";
 import Vec3 from "./math/Vec3.js";
 //import digAndBuild from "./digAndBuild.js";
 
+import pop from "../../pop/index.js";
+const { Sound } = pop;
+const shoot = new Sound("res/sounds/shoot.mp3", {});
+const scream = new Sound("res/sounds/scream.mp3", {});
+
 import Bullet from "./entities/Bullet.js";
 import Zomb from "./entities/Zomb.js";
-
-const deb1 = document.querySelector("#deb1");
 
 class Game3D {
   constructor(pxWidth, pxHeight) {
@@ -159,6 +162,7 @@ class Game3D {
         gl.canvas.width,
         gl.canvas.height
       );
+      shoot.play();
       const b = new Bullet(this.gl, r);
       bullets.push(b);
     }
@@ -167,7 +171,6 @@ class Game3D {
     this.closest = 100;
     world.col = [];
     this.zomb = zomb.filter(z => {
-
       if (isWin) {
         z.cube.position.y += 1 * dt;
         return true;
@@ -214,6 +217,7 @@ class Game3D {
         if (dist < 3) {
           z.dead = true;
           b.dead = true;
+          scream.play();
         }
       });
 
