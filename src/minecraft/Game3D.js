@@ -20,6 +20,7 @@ const shoot = new Sound("res/sounds/shoot.mp3", {});
 const scream = new Sound("res/sounds/scream.mp3", {});
 
 import Bullet from "./entities/Bullet.js";
+import Particle from "./entities/Particle.js";
 import Zomb from "./entities/Zomb.js";
 
 class Game3D {
@@ -69,6 +70,7 @@ class Game3D {
     this.state.lastSpawn = 0;
 
     this.bullets = [];
+    this.particles = [];
     this.world = world;
     this.player = player;
 
@@ -214,9 +216,12 @@ class Game3D {
           .addv(b.cube.position)
           .lengthSq();
 
-        if (dist < 3) {
+        if (dist < 1) {
           z.dead = true;
           b.dead = true;
+          const p = new Particle(gl);
+          this.particles.push(p);
+          p.cube.position.setv(z.cube.position);
           scream.play();
         }
       });
@@ -226,7 +231,17 @@ class Game3D {
   }
 
   render(dt, t) {
-    const { player, world, gl, camera, shaders, skybox, zomb, bullets } = this;
+    const {
+      player,
+      world,
+      gl,
+      camera,
+      shaders,
+      skybox,
+      zomb,
+      bullets,
+      particles
+    } = this;
 
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
 
@@ -250,7 +265,7 @@ class Game3D {
       )
       .render(world.chunks);
 
-    if (bullets.length) {
+    if (bullets.length || particles.length) {
       shaders.debug
         .activate()
         .preRender(
@@ -260,8 +275,14 @@ class Game3D {
           [0.6, 0.6, 0.6, 0.3],
           "useTex",
           0.0
-        )
-        .render(bullets.map(b => b.cube));
+        );
+
+      if (bullets.length) {
+        shaders.debug.render(bullets.map(b => b.cube));
+      }
+      if (particles.length) {
+        shaders.debug.render(particles.map(p => p.cube));
+      }
     }
 
     if (zomb.length) {

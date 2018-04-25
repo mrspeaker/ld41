@@ -39,7 +39,8 @@ const fs = `#version 300 es
   void main() {
     vec4 tx = texture(tex, vuv);
     if (tx.a < 0.1)
-      discard;
+      col = vec4(1.0, 0.2, 0.2, 1.0);
+      //discard;
 
     float near = 10.0;
     float far = 40.0;
