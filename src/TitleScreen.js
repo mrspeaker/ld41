@@ -7,7 +7,7 @@ class TitleScreen extends Container {
   constructor(w, h, controls, onPlay) {
     super();
     [...document.querySelectorAll(".ui")].forEach(e => e.style.display = "none");
-    const t = this.add(new Text("Obake by Mr Speaker", { fill: "#fff", font: "bold 40pt 'Amatic SC', sans-serif", align: "center" }));
+    const t = this.add(new Text("Obaké by Mr Speaker", { fill: "#fff", font: "bold 40pt 'Amatic SC', sans-serif", align: "center" }));
     t.pos.set(w / 2, 100);
     const f1 = { fill: "#fff", font: "bold 20pt 'Amatic SC', sans-serif" };
     const f2 = { fill: "#fff", font: "bold 16pt 'Amatic SC', sans-serif", align: "center" };
