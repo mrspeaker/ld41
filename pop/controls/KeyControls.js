@@ -27,7 +27,7 @@ class KeyControls {
   }
 
   get x() {
-    if (this.keys[37] || this.keys[65]) {
+    if (this.keys[37] || this.keys[65] || this.keys[81]) {
       return -1;
     }
     if (this.keys[39] || this.keys[68]) {
@@ -37,7 +37,7 @@ class KeyControls {
   }
 
   get y() {
-    if (this.keys[38] || this.keys[87]) {
+    if (this.keys[38] || this.keys[87] || this.keys[90]) {
       return -1;
     }
     if (this.keys[40] || this.keys[83]) {

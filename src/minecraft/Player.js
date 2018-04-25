@@ -49,7 +49,7 @@ class Player {
     let zo = 0;
 
     // TODO: sqrt 2
-    if (keys.isDown(87 /*w*/) || keys.isDown(90 /*q*/) || keys.isDown(83)) {
+    if (keys.isDown(87 /*w*/) || keys.isDown(90 /*z*/) || keys.isDown(83)) {
       const dir = keys.isDown(83) ? 1 : -1;
       const v = dt * speed * dir;
       // Get 2D direction
