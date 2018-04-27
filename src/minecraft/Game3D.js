@@ -217,7 +217,6 @@ class Game3D {
         if (dist < 3) {
           z.dead = true;
           b.dead = true;
-          scream.play();
         }
       });
 

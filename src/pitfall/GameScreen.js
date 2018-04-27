@@ -22,7 +22,7 @@ const tiles = new Texture("res/images/ld41-tiles.png");
 const laugh1 = new Sound("res/sounds/laugh.mp3", {});
 const getSound = new Sound("res/sounds/get1.mp3", {});
 const deadSound = new Sound("res/sounds/dead.mp3", {});
-const theme = new Sound("res/sounds/theme.mp3", { volume: 0.1, loop: true});
+const theme = new Sound("res/sounds/theme.mp3", { volume: 0.1, loop: true });
 
 class GameScreen extends Container {
   constructor(w, h, controls, onGameOver) {
@@ -96,7 +96,9 @@ class GameScreen extends Container {
   }
 
   addBaddie() {
-    const { player, baddies, map, camera } = this;
+    const { player, baddies, map, camera, state, lastLaugh } = this;
+    if (!state.is("PLAY")) return;
+
     const z = baddies.add(new Zomb(map));
     if (player.onLadder) {
       const exit = map.getLadderExit(player.pos);
@@ -109,8 +111,11 @@ class GameScreen extends Container {
     } else {
       z.pos.copy(player.pos);
     }
-    laugh1.play();
-    camera.flash();
+    if (Date.now() - (lastLaugh || 0) > 700) {
+      laugh1.play();
+      camera.flash();
+      this.lastLaugh = Date.now();
+    }
   }
 
   update(dt, t) {
@@ -150,7 +155,7 @@ class GameScreen extends Container {
 
         break;
       case "DIE":
-        this.msg.text = "You have died in 2D. The worst dimension."
+        this.msg.text = "You have died in 2D. The worst dimension.";
         if (state.time > 5) {
           this.msg.text = "";
           state.set("DEAD");
