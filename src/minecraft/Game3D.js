@@ -12,7 +12,6 @@ import Cube from "./models/Cube.js";
 import Ray from "./math/Ray.js";
 import glUtils from "./glUtils.js";
 import Vec3 from "./math/Vec3.js";
-//import digAndBuild from "./digAndBuild.js";
 
 import pop from "../../pop/index.js";
 const { Sound } = pop;
