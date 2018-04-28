@@ -34,12 +34,19 @@ class Zomb extends TileSprite {
     switch (state.get()) {
       case "INIT":
         state.set("BIRTH");
+        this.spawnY = this.pos.y;
+        this.pos.y -= 55;
+        this.alpha = 0.1;
         break;
       case "BIRTH":
         this.visible = ((t * 5) % 2) | 0;
+        this.pos.y += 25 * dt;
+        this.alpha += 0.6 * dt;
         if (state.time > 2) {
+          this.alpha = 1;
           this.visible = true;
           state.set("SWARM");
+          this.pos.y = this.spawnY;
         }
         break;
       case "SWARM":
