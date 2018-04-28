@@ -96,8 +96,7 @@ class GameScreen extends Container {
   }
 
   addBaddie() {
-    const { player, baddies, map, camera, state, lastLaugh } = this;
-    if (!state.is("PLAY")) return;
+    const { player, baddies, map, camera, lastLaugh } = this;
 
     const z = baddies.add(new Zomb(map));
     if (player.onLadder) {

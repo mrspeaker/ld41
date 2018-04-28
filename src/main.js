@@ -5,33 +5,33 @@ import Game3D from "./minecraft/Game3D.js";
 import GameScreen from "./pitfall/GameScreen.js";
 import TitleScreen from "./TitleScreen.js";
 
-const pxWidth = 900;
-const pxHeight = 500;
+import fullscreen from "./fullscreen.js";
 
-const mcGame = new Game3D(pxWidth, pxHeight);
-const game = new Game(pxWidth, pxHeight, "#pitfall");
-const { w, h } = game;
+const w = 900;
+const h = 500;
+
+const game3D = new Game3D(w, h);
+const game2D = new Game(w, h, "#pitfall");
+
 const controls = new KeyControls();
+fullscreen("#games", "#fs");
 
 function newGame(reset3D) {
   if (reset3D) {
-    mcGame.reset();
+    game3D.reset();
   }
-  game.scene = new GameScreen(w, h, controls, title);
+  game2D.scene = new GameScreen(w, h, controls, title);
 }
 
 function title() {
-  mcGame.clear();
-  game.scene = new TitleScreen(w, h, controls, () => newGame(true));
+  game3D.clear();
+  game2D.scene = new TitleScreen(w, h, controls, () => newGame(true));
 }
 
 // MAIN
 preload()
-  .then(res => mcGame.init(res))
-  .then(() => {
-    //newGame(false);
-    title();
-  });
+  .then(res => game3D.init(res))
+  .then(title);
 
 function preload() {
   const loadImg = src =>
@@ -50,7 +50,6 @@ function preload() {
       { name: "cube3", src: "res/images/mc_dn.png", type: "img" },
       { name: "cube4", src: "res/images/mc_bk.png", type: "img" },
       { name: "cube5", src: "res/images/mc_ft.png", type: "img" },
-      { name: "ad", src: "res/images/zombo1.png", type: "tex" },
       { name: "ringu", src: "res/images/ringu.png", type: "tex" }
     ].map(
       ({ name, src, type }) =>
@@ -66,21 +65,23 @@ function preload() {
   );
 }
 
-game.run((dt, t) => {
-  if (game.scene && game.scene.name === "game2d") {
-    if (game.scene.state.is("DIE")) {
-      mcGame.isDead = true;
-    }
-    if (game.scene.state.is("WIN")) {
-      mcGame.isWin = true;
-    }
-    mcGame.update(dt, t);
+function interdimensionalLogic() {
+  const { scene } = game2D;
+  if (scene.state.is("DIE")) {
+    game3D.isDead = true;
+  }
+  if (scene.state.is("WIN")) {
+    game3D.isWin = true;
+  }
+  if (game3D.world.col.length && scene.state.is("PLAY")) {
+    scene.addBaddie();
+  }
+}
 
-    // Logic between worlds...
-    if (mcGame.world.col.length) {
-      game.scene.addBaddie();
-    }
-
-    mcGame.render(dt, t);
+game2D.run((dt, t) => {
+  if (game2D.scene.name === "game2d") {
+    game3D.update(dt, t);
+    interdimensionalLogic();
+    game3D.render(dt, t);
   }
 });

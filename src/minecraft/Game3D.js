@@ -17,7 +17,6 @@ import Vec3 from "./math/Vec3.js";
 import pop from "../../pop/index.js";
 const { Sound } = pop;
 const shoot = new Sound("res/sounds/shoot.mp3", {});
-const scream = new Sound("res/sounds/scream.mp3", {});
 
 import Bullet from "./entities/Bullet.js";
 import Zomb from "./entities/Zomb.js";
