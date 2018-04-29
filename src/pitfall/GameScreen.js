@@ -45,9 +45,17 @@ class GameScreen extends Container {
     const { pos } = player;
     pos.set(map.w / 2, map.h - map.tileH * 6);
 
-    [...Array(50)].map(() => {
+    const placeGrail = (n, placed = []) => {
+      if (n <= 0) return placed;
+      const p = map.getPlatformSpot();
+      if (placed.find(({ x, y }) => x == p.x && y == p.y)) {
+        return placeGrail(n, placed);
+      }
+      return placeGrail(n - 1, [...placed, p]);
+    };
+    placeGrail(50).forEach(pos => {
       const g = this.grail.add(new Grail());
-      g.pos.copy(map.getPlatformSpot());
+      g.pos.copy(pos);
     });
 
     this.controls = controls;
