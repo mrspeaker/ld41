@@ -93,14 +93,25 @@ class GameScreen extends Container {
       t.pos.x = i * 35;
       hearts.add(t);
     });
+    const t = new TileSprite(tiles, 32, 32);
+    t.frame.x = 0;
+    t.frame.y = 6;
+    t.pos.x = 75;
+    t.pos.y = -18;
+    t.scale.x = 2;
+    t.scale.y = 2;
+    t.alpha = 0.7;
+
+    hearts.add(t);
     hearts
       .add(
         new Text(this.remain, {
           font: "bold 25pt 'Amatic SC', sans-serif",
-          fill: "#fff"
+          fill: "#fff",
+          align: "center"
         })
       )
-      .pos.set(70, 30);
+      .pos.set(107, 30);
   }
 
   addBaddie() {
