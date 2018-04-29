@@ -4,7 +4,7 @@ import Vec3 from "../math/Vec3.js";
 class Zomb {
   constructor(gl, target, map) {
     //super();
-    const cube = Billboard.create(gl, "zomb", 1, 2, 1);
+    const cube = Billboard.create(gl, "zomb", 0.75, 2, 1);
     this.cube = cube;
     this.target = target;
     this.off = Math.random() * 100;
