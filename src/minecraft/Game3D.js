@@ -12,12 +12,10 @@ import Cube from "./models/Cube.js";
 import Ray from "./math/Ray.js";
 import glUtils from "./glUtils.js";
 import Vec3 from "./math/Vec3.js";
-//import digAndBuild from "./digAndBuild.js";
 
 import pop from "../../pop/index.js";
 const { Sound } = pop;
 const shoot = new Sound("res/sounds/shoot.mp3", {});
-const scream = new Sound("res/sounds/scream.mp3", {});
 
 import Bullet from "./entities/Bullet.js";
 import Particle from "./entities/Particle.js";
@@ -92,7 +90,7 @@ class Game3D {
     let spot;
     while (!spot) {
       const spotArray = world.getFreeSpot();
-      spot = { x: spotArray[0], y: spotArray[1], z: spotArray[2] };
+      spot = { x: spotArray[0], y: spotArray[1] - 1, z: spotArray[2] };
       const dist = Vec3.from(spot)
         .scale(-1)
         .addv(player.pos)
@@ -222,7 +220,7 @@ class Game3D {
           const p = new Particle(gl);
           this.particles.push(p);
           p.cube.position.setv(z.cube.position);
-          scream.play();
+          // scream.play();
         }
       });
 

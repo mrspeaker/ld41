@@ -22,9 +22,7 @@ In the **3rd Dimension**: W A S D will move you, mouse will look and shoot, and 
 
 ## Notes to self
 
-here were my in-progress notes during the game... ignore them!
-
-*NOTE: very important!* The code you find here is more zombified than the walking dead. It was mashed together extremely quickly and will little regard for the find history of the art of computer science. I'm sorry.  
+here were my in-progress notes during the game... ignore them! *ALSO NOTE: very important!* The code you find here is more zombified than the walking dead. It was mashed together extremely quickly and will little regard for the find history of the art of computer science. I'm sorry.  
 
 two games overlaayed on each other.
 minecraft in background, pitfall II in foreground

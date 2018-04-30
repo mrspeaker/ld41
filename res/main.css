@@ -2,8 +2,9 @@ body {
   padding: 0;
   margin: 0;
   overflow: hidden;
-  background-color: #000;
+  background-color: #111;
   font-family: "Amatic SC" monospace;
+  height: 100%;
 }
 a {
   color: #242;
@@ -17,7 +18,7 @@ a {
   margin: auto auto;
 }
 .anotherVisitor {
-  color: #242;
+  color: #445;
   margin: 50px auto;
   width: 30em;
   position: absolute;
@@ -40,7 +41,7 @@ a {
   display: none;
 }
 
-#pitfall {
+#minecraft, #pitfall canvas {
   position: absolute;
   top: 0;
   left: 0;
@@ -50,16 +51,33 @@ a {
 }
 
 #games {
+  width: 800px;
+  height: 500px;
   margin: 50px auto;
   text-align: center;
   position: relative;
 }
 
-#minecraft, #pitfall {
+#minecraft, #pitfall canvas {
   width: 100%;
   margin: 0 auto;
 }
 
 canvas {
   border-radius: 10px;
+}
+#games:-moz-full-screen canvas {
+  width: 100%;
+}
+#games:-webkit-full-screen canvas {
+  width: 100%
+}
+#games:fullscreen canvas {
+  width: 100%
+}
+
+#fs {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
 }

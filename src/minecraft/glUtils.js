@@ -163,8 +163,8 @@ const glUtils = {
   },
 
   setSize(gl, w, h) {
-    gl.canvas.style.width = w + "px";
-    gl.canvas.style.height = h + "px";
+    //gl.canvas.style.width = w + "px";
+  //  gl.canvas.style.height = h + "px";
     gl.canvas.width = w;
     gl.canvas.height = h;
     gl.viewport(0, 0, w, h);

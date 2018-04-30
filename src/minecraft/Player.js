@@ -43,33 +43,35 @@ class Player {
     const { camera, world, pos, controls, vel, acc, speed } = this;
     const { transform } = camera;
     const { keys } = controls;
+    const isDown = keys.isDown.bind(keys);
 
     let xo = 0;
     let yo = 0;
     let zo = 0;
 
+    const fwd = isDown(87 /*w*/) || isDown(90 /*z*/) || isDown(38 /*up*/);
+    const back = isDown(40 /* down */) || isDown(83 /*s?*/);
+    const left = isDown(65 /*a*/) || isDown(81 /*q*/) || isDown(37 /*left*/);
+    const right = isDown(68 /*d*/) || isDown(39 /*right*/);
+
     // TODO: sqrt 2
-    if (keys.isDown(87 /*w*/) || keys.isDown(90 /*z*/) || keys.isDown(83)) {
-      const dir = keys.isDown(83) ? 1 : -1;
+    if (fwd || back) {
+      const dir = back ? 1 : -1;
       const v = dt * speed * dir;
       // Get 2D direction
       const angle = Math.atan2(transform.forward[2], transform.forward[0]);
       xo += Math.cos(angle) * v;
       zo += Math.sin(angle) * v;
     }
-    if (
-      keys.isDown(65 /*a*/) ||
-      keys.isDown(81 /*q*/) ||
-      keys.isDown(68 /*d*/)
-    ) {
-      const dir = keys.isDown(68) ? 1 : -1;
+    if (left || right) {
+      const dir = right ? 1 : -1;
       const v = dt * speed * dir;
       xo += transform.right[0] * v;
       zo += transform.right[2] * v;
     }
 
     // Jump everybody
-    if (keys.isDown(32) && this.onGround) {
+    if (isDown(32) && this.onGround) {
       acc.y = 0.25; // jump force
       this.onGround = false;
     }

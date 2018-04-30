@@ -2,8 +2,8 @@ import Model from "./Model.js";
 import glUtils from "../glUtils.js";
 
 class Billboard {
-  static create(gl, name = "Billboard", w, h, d, x, y, z) {
-    return new Model(Billboard.createMesh(gl, name, w, h, d, x, y, z));
+  static create(gl, name = "Billboard", w, h, x, y, z) {
+    return new Model(Billboard.createMesh(gl, name, w, h, x, y, z));
   }
   static createMesh(
     gl,
@@ -16,14 +16,15 @@ class Billboard {
   ) {
     const w = width / 2;
     const h = height / 2;
+
     const x0 = x - w;
     const x1 = x + w;
     const y0 = y - h;
     const y1 = y + h;
-
+    const z0 = z - w;
     // prettier-ignore
     const verts = [
-      x0, y1, z,  x0, y0, z,  x1, y0, z,  x1, y1, z,
+      x0, y1, z0,  x0, y0, z0,  x1, y0, z0,  x1, y1, z0,
     ];
 
     // prettier-ignore
