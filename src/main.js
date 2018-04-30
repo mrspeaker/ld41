@@ -44,13 +44,13 @@ function preload() {
   return Promise.all(
     [
       { name: "blocks", src: "res/images/mine.png", type: "tex" },
+      { name: "ringu", src: "res/images/ringu.png", type: "tex" },
       { name: "cube0", src: "res/images/mc_rt.png", type: "img" },
       { name: "cube1", src: "res/images/mc_lf.png", type: "img" },
       { name: "cube2", src: "res/images/mc_up.png", type: "img" },
       { name: "cube3", src: "res/images/mc_dn.png", type: "img" },
       { name: "cube4", src: "res/images/mc_bk.png", type: "img" },
-      { name: "cube5", src: "res/images/mc_ft.png", type: "img" },
-      { name: "ringu", src: "res/images/ringu.png", type: "tex" }
+      { name: "cube5", src: "res/images/mc_ft.png", type: "img" }
     ].map(
       ({ name, src, type }) =>
         new Promise(res => {

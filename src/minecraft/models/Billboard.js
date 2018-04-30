@@ -43,7 +43,7 @@ class Billboard {
     ];
 
     const mesh = glUtils.createMeshVAO(gl, name, indices, verts, normals, uvs);
-    mesh.noCulling = false;
+    mesh.doBlending = true;
     return mesh;
   }
 }

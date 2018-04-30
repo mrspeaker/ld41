@@ -38,7 +38,7 @@ const fs = `#version 300 es
   out vec4 col;
   void main() {
     vec4 tx = texture(tex, vuv);
-    if (tx.a < 0.1)
+    if (tx.a == 0.0)
       discard;
     //col = vec4(1.0, 0.2, 0.2, 1.0);
 
@@ -48,7 +48,7 @@ const fs = `#version 300 es
     float fog = 1.0 - (clamp((far - dist) / (far - near), 0.0, 1.0));
     //vec4 tx = useTex == 1.0 ? texture(tex, vuv) : vcol;
     vec4 fogmix = mix(tx, vec4(0, 0, 0, 1.0), fog);//vec4(65.0/255.0, 95.0/255.0, 0.8, 1.0), fog);
-    col = vec4(fogmix.rgb, 1.0);
+    col = vec4(fogmix.rgb, tx.a);
 
   }
 `;
@@ -56,10 +56,7 @@ const fs = `#version 300 es
 class BillboardShader extends Shader {
   constructor(gl, pMatrix) {
     super(gl, vs, fs);
-    this.setUniforms(
-      "proj", pMatrix,
-      "colour", [1.0, 1.0, 0.0, 0.1]
-    );
+    this.setUniforms("proj", pMatrix, "colour", [1.0, 1.0, 0.0, 0.1]);
   }
 }
 

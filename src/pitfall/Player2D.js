@@ -12,17 +12,20 @@ class Player2D extends TileSprite {
       w: 10,
       h: 20
     };
-    this.anims = new AnimManager(this);
-    this.anims.add("idle", [{ x: 0, y: 0 }], 1000);
-    this.anims.add("walk", [1, 2, 3, 4, 5].map(x => ({ x, y: 0 })), 0.1);
-    this.anims.add("climb", [0, 1].map(x => ({ x, y: 1 })), 0.1);
-    this.anims.play("walk");
+
+    const anims = new AnimManager(this);
+    anims.add("idle", [{ x: 0, y: 0 }], 1000);
+    anims.add("walk", [1, 2, 3, 4, 5].map(x => ({ x, y: 0 })), 0.1);
+    anims.add("climb", [0, 1].map(x => ({ x, y: 1 })), 0.1);
+    anims.play("walk");
+    this.anims = anims;
 
     this.controls = controls;
     this.map = map;
+    this.onGameOver = onGameOver;
+
     this.hp = 2;
     this.invincible = 0;
-    this.onGameOver = onGameOver;
     this.dead = false;
     this.wins = false;
   }
@@ -41,14 +44,13 @@ class Player2D extends TileSprite {
   }
 
   update(dt, t) {
-    const { pos, controls, map, anims } = this;
+    const { pos, controls, map, anims, anchor, scale } = this;
     const { x, y } = controls;
     const xo = 100 * dt * Math.sign(x);
     const yo = 100 * dt * Math.sign(y);
     const r = wallslideWithLadders(this, map, xo, yo);
     if (!this.onLadder) {
       pos.x += r.x;
-
       // TODO: LOLOLOLOL... last minute fix for ladder climb teleport bug!
       pos.x = Math.min(1540, pos.x);
     }
@@ -56,23 +58,19 @@ class Player2D extends TileSprite {
 
     if (this.invincible) {
       this.visible = ((t * 10) % 2) | 0;
-      this.invincible -= dt;
-      if (this.invincible <= 0) {
+      if ((this.invincible -= dt) <= 0) {
         this.visible = true;
       }
     }
 
     if (!this.onLadder) {
-      if (!x) anims.play("idle");
+      if (!x) {
+        anims.play("idle");
+      }
       else {
         anims.play("walk");
-        if (x > 0) {
-          this.anchor.x = 0;
-          this.scale.x = 1;
-        } else if (x < 0) {
-          this.anchor.x = this.w;
-          this.scale.x = -1;
-        }
+        anchor.x = x > 0 ? 0 : this.w;
+        scale.x = x > 0 ? 1 : -1;
       }
     } else {
       if (!y) anims.stop();
