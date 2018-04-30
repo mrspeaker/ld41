@@ -16,6 +16,8 @@ import Vec3 from "./math/Vec3.js";
 import pop from "../../pop/index.js";
 const { Sound } = pop;
 const shoot = new Sound("res/sounds/shoot.mp3", {});
+const scream1 = new Sound("res/sounds/scream.mp3", {});
+const scream2 = new Sound("res/sounds/scream1.mp3", {});
 
 import Bullet from "./entities/Bullet.js";
 import Particle from "./entities/Particle.js";
@@ -135,6 +137,7 @@ class Game3D {
       controls,
       zomb,
       bullets,
+      particles,
       ray,
       gl,
       isDead,
@@ -217,14 +220,29 @@ class Game3D {
         if (dist < 1) {
           z.dead = true;
           b.dead = true;
-          const p = new Particle(gl);
-          this.particles.push(p);
-          p.cube.position.setv(z.cube.position);
-          // scream.play();
+          [...Array(10)].map(() => {
+            const p = new Particle(gl);
+            this.particles.push(p);
+            p.cube.position.setv(z.cube.position);
+          });
+
+          const dist = Math.min(150, v
+            .setv(z.cube.position)
+            .scale(-1)
+            .addv(player.pos)
+            .lengthSq());
+          const ratio = 1 - (dist / 150);
+          const volume = ratio * 0.8 + 0.2;
+          [scream1, scream2][Math.random() * 2 | 0].play({ volume });
         }
       });
 
       return !b.dead;
+    });
+
+    this.particles = particles.filter(p => {
+      p.update(dt);
+      return !p.dead;
     });
   }
 
