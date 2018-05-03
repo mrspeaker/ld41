@@ -1,10 +1,11 @@
 import Sprite from "./Sprite.js";
 import Texture from "./Texture.js";
 import TileSprite from "./TileSprite.js";
+import Vec from "./utils/Vec.js";
 
 class Container {
   constructor() {
-    this.pos = { x: 0, y: 0 };
+    this.pos = new Vec();
     this.children = [];
   }
 

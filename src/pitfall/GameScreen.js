@@ -8,7 +8,8 @@ const {
   Text,
   math,
   Texture,
-  TileSprite
+  TileSprite,
+  Timer
 } = pop;
 
 import Player2D from "./Player2D.js";
@@ -16,6 +17,7 @@ import Level from "./Level.js";
 import Zomb from "./entities/Zomb.js";
 import Grail from "./entities/Grail.js";
 import OneUp from "./entities/OneUp.js";
+import Overlay from "./Overlay.js";
 
 const tiles = new Texture("res/images/ld41-tiles.png");
 
@@ -29,13 +31,13 @@ class GameScreen extends Container {
     super();
     this.name = "game2d";
     this.onGameOver = onGameOver;
+    this.alpha = 0;
     const map = new Level();
     const player = new Player2D(controls, map, () => {
       this.state.set("DIE");
       this.playerGotWacked();
     });
     const camera = new Camera(player, { w, h }, { w: map.w, h: map.h });
-
     this.add(camera);
     camera.add(map);
     this.grail = camera.add(new Container());
@@ -80,6 +82,8 @@ class GameScreen extends Container {
       })
     );
     this.msg.pos.set(w / 2, h / 2 - 80);
+
+    this.overlay = null;
   }
 
   setHearts() {
@@ -137,17 +141,33 @@ class GameScreen extends Container {
   }
 
   update(dt, t) {
-    super.update(dt, t);
-
     const { state, player } = this;
+    super.update(dt, t);
     state.update(dt);
     switch (state.get()) {
       case "INIT":
+        // Hack to get it to erase existing title screen on first frame.
+        this.alpha = state.time < 0.1 ? 0.01 : 0;
+
+        if (state.time > 5) {
+          state.set("READY");
+        }
+        break;
+      case "READY":
+        // if (!this.overlay) {
+        //   this.overlay = this.add(new Overlay());
+        //   this.overlay.pos.set(300, 100);
+        // }
+        if (state.first) {
+          this.add(new Timer(4, r => (this.alpha = r), () => (this.alpha = 1)));
+        }
         this.msg.text = "Collect " + this.remain + " talismen. That's all.";
         if (state.time > 4) {
           this.msg.text = "";
           state.set("PLAY");
           theme.play();
+          this.remove(this.overlay);
+          //this.overlay = null;
         }
         break;
       case "PLAY":

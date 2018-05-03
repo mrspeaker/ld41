@@ -79,7 +79,8 @@ function interdimensionalLogic() {
 }
 
 game2D.run((dt, t) => {
-  if (game2D.scene.name === "game2d") {
+  const { scene } = game2D;
+  if (scene.name === "game2d" && !scene.state.isIn("DIE", "DEAD")) {
     game3D.update(dt, t);
     interdimensionalLogic();
     game3D.render(dt, t);

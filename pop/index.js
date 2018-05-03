@@ -21,6 +21,7 @@ import State from "./State.js";
 import Text from "./Text.js";
 import Texture from "./Texture.js";
 import TileMap from "./TileMap.js";
+import Timer from "./Timer.js";
 import TileSprite from "./TileSprite.js";
 import TwinStickControls from "./controls/TwinStickControls.js";
 import Vec from "./utils/Vec.js";
@@ -54,6 +55,7 @@ export default {
   Texture,
   TileMap,
   TileSprite,
+  Timer,
   TwinStickControls,
   Vec,
   visibleInViewport,

@@ -10,7 +10,7 @@ class CanvasRenderer {
   }
 
   render(container, clear = true) {
-    if (container.visible == false) {
+    if (container.visible == false || container.alpha === 0) {
       return;
     }
     const { ctx } = this;
@@ -97,7 +97,12 @@ class CanvasRenderer {
     if (clear) {
       ctx.clearRect(0, 0, this.w, this.h);
     }
+
+    if (container.alpha) {
+      ctx.globalAlpha = container.alpha;
+    }
     renderRec(container);
+    ctx.globalAlpha = 1;
   }
 }
 
