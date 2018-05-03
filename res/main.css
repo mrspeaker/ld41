@@ -77,6 +77,10 @@ canvas {
 }
 
 #fs {
+  padding-left: 10px;
+}
+
+#icons {
   position: absolute;
   bottom: 15px;
   right: 15px;
