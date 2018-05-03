@@ -256,7 +256,8 @@ class Game3D {
       skybox,
       zomb,
       bullets,
-      particles
+      particles,
+      isWin
     } = this;
 
     gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
@@ -314,7 +315,7 @@ class Game3D {
           "useTex",
           1.0,
           "sprite",
-          [((t * 4) % 6) | 0, 0]
+          [isWin ? 0 : ((t * 4) % 6) | 0, 0]
         )
         .render(zomb.map(z => z.cube));
     }
