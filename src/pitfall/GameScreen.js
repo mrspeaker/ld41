@@ -247,7 +247,7 @@ class GameScreen extends Container {
         )
       );
       ou.pos.copy(g.pos);
-      g.dead = true; //remove(g);
+      g.dead = true;
       if (this.remain <= 0 && !this.isWin) {
         this.state.set("WIN");
         player.wins = true;
